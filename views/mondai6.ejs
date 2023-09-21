@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>回答一覧</title>
+        <link type="text/css" rel="stylesheet" href="/stylesheets/mondai4.css">
+  </head>
+    </head>
+    <body>
+        <script src ='/socket.io/socket.io.js'></script>
+        <h1>回答一覧</h1>
+        <div style ="display: flex;">
+            <ul>
+                <table  id ="table" class ="example">
+                  <thead>
+                    <tr><th>問題ID</th><th>名前</th><th>回答</th><th>判定</th><th>正解追加</th><th>正解削除</th></tr>
+                  </thead>
+                  <tbody>
+                <% web.forEach((list) => { %>
+                        <tr>
+                            <td><%= list.mon_ID%></td>
+                            <td><%= list.username %></td>
+                            <td><%= list.kai %></td>
+                            <td><%= list.han %></td>
+                            <td><input type="checkbox"></td>
+                            <td><input type="checkbox"></td>
+                        </tr>
+                <% }) %>
+              </table>
+            </tbody>
+              </ul>
+              <div id = "div1"></div>
+            </div>
+            <div id = "div2"></div>
+            <div id = "div3"></div>
+            <form name ="my">
+              <input type="submit" name="kekka" value="結果発表"><br>
+              <br>
+              <input type="submit" name="tuika" value="正解追加"><br>
+              <br>
+              <input type="submit" name="sakuzyo" value="正解削除"><br>
+              <br>
+            </form>
+            <script src="javascripts/mondai6.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang = "ja">
+<head>
+    <meta charset ="utf-8">
+    <title>問題選択</title>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/mondai2.css">
+</head>
+<body>
+    <script src="/socket.io/socket.io.js"></script>
+    <p><%= name %></p>
+    <br>
+    <form name ="f1">
+        <div class="parent">
+        <h1>問題一覧</h1>
+        <div class="child">
+        <input type ="submit" name="tuika" class = "tui"value="問題追加">
+        <br>
+        <br>
+        <input type="submit" name="kakunin"class = "tui" value="問題確認">
+        </div>
+        </div>
+        <p>問題を選択してください。</p>
+        <select  name = "mo1" class="cp_sl02" required>
+           <% web.forEach((list) => { %>
+            <option><%= list.name %></option>
+            <% }) %>
+        </select>
+        <span class="cp_sl02_highlight"></span>
+        <span class="cp_sl02_selectbar"></span>
+        <label class="cp_sl02_selectlabel">問題を選んでください。</label>
+        <br>
+        <p>回答の成否判定の仕方を選択してください。</p>
+        <br>
+        <input type="radio" name = "hantei" value="自動">自動
+        <input type="radio" name = "hantei" value="手動">手動
+        <br>
+        <p>制限時間を秒単位で入力してください。</p>
+          <input id = "time2" type ="text" name="byou" style="width:40px; height: 20px;">
+        <br>
+        <br>
+        <input type ="submit" class ="button" name = "okuru" value="問題を送る">
+        <br>
+    </form>
+    <div class="sumple">
+      <a href="http://localhost:3000/login">戻る</a>
+    </div>
+    <script src="/javascripts/mondai2.js"></script>
+</body>
+</html>

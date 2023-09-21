@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>回答一覧</title>
+        <link type="text/css" rel="stylesheet" href="/stylesheets/mondai4.css">
+    </head>
+    <body>
+        <script src ='/socket.io/socket.io.js'></script>
+        <h1>回答一覧</h1>
+        <div style ="display: flex;">
+            <ul>
+                <table  id ="table" class ="example">
+                  <thead>
+                    <tr><th>問題ID</th><th>名前</th><th>回答</th><th>判定</th></tr>
+                  </thead>
+                  <tbody>
+                <% web.forEach((list) => { %>
+                        <tr>
+                          <td><%= list.mon_ID%></td>
+                          <td><%= list.username %></td>
+                          <td><%= list.kai %></td>
+                          <td><input type="radio" value="○" name="radio1">○</td>
+                          <td><input type="radio" value ="✕" name="radio1">✕</td>
+                        </tr>
+                <% }) %>
+              </table>
+            </tbody>
+              </ul>
+              <div id = "div1"></div>
+            </div>
+            <div id = "div2"></div>
+            <div id = "div3"></div>
+            <form name ="my">
+              <input type="submit" name="kekka" value="結果発表">
+            </form>
+        <script src="javascripts/mondai5.js"></script>
+    </body>
+</html>

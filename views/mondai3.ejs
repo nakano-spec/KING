@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>
+            受付中
+        </title>
+        <link type="text/css" rel="stylesheet" href="/stylesheets/mondai3.css">
+    </head>
+    <body>
+        <script src ='/socket.io/socket.io.js'></script>
+        <div id="my">
+            <p><%= byou1 %></p>
+        </div>
+        <div class="rem" >
+        <div id = "remain" class = "rem2"></div>
+        <div id = remain3 class = "rem3">:</div>
+        <div id="remain2" class = "rem4"></div>
+        </div>
+       
+        <form name = myform2>
+        <div class="example">
+            
+            <br>
+            <br>
+            <br>
+            <input type ="submit" class ="s" name="button3" value ="回答終了">
+            <br>
+            <br>
+            <input type="submit" class="a" name = "kekka" value = "回答結果へ">
+        </div>
+        </form>
+        <script src = "/javascripts/mondai3.js"></script>
+    </body>
+</html>

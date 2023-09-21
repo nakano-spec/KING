@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>回答即時判断表示システム</title>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/login.css">
+</head>
+<body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <p id="abc">回答即時判断表示システム</p><br>
+    <div align="center">
+         <table>
+            <form name = "myform" action="/login">
+                <div class="row">
+                    <form class="col s12">
+                      <div class="row">
+                        <div class="input-field-col-s6">
+                          <input id="first_name" name="name" type="text" class="validate" minlength="2" maxlength="10" placeholder="username"
+                          value=""  >
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="input-field-col-s12">
+                          <input id="password" type="password" name="password1" class="validate" minlength="8" maxlength="16" placeholder="password"
+                            value="" >
+                        </div>
+                      </div>
+                      <!-- <div class="row">
+                        <div class="input-field col s12">
+                          <label for="password">　確　認　</label>
+                          <input id="password" type="password" name="password2" class="validate" minlength="8" maxlength="16" placeholder="もう一度入力"
+                          value="" size="20" style="font-size: 50px;">
+                        </div>
+                      </div> -->
+                      <div class="row">
+                      </div>
+                  </div> 
+                  <br>
+                  <input type="submit" name="button" value="ログイン" class="s"></button>
+            </form>
+        </table>
+        <div class = "su">
+          <br>
+          <button class = "sinki"onclick="location.href='/new_player'">新規登録</button>
+        </div>
+    </div>
+    <div class="container">
+    <ul id="mondai"></ul><!--socketでメッセ表示するところ-->
+    </div>
+    <script src="/javascripts/login.js">
+    </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang ="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>回答</title>
+        <link type="text/css" rel="stylesheet" href="/stylesheets/kaitou2.css">
+    </head>
+    <body>
+        <script src ="/socket.io/socket.io.js"></script>
+        <div id = myid2>
+            <p><%= name %></p>
+        </div>
+        <h1><%= web[0]["mondaibun"] %></h1>
+        <br>
+        <form name="myform1">
+        
+        <div class="radiobox">
+            <input id="radio1" class="radiobutton" name="hoge" type="radio" value="ア" />
+            <label for="radio1">ア</label><%= web[0]["sen1"] %>
+            <br>
+            <br>
+            <br>
+            <br>
+            <input id="radio2" class="radiobutton" name="hoge" type="radio" value="イ" />
+            <label for="radio2">イ</label><%= web[0]["sen2"] %>
+            <br>
+            <br>
+            <br>
+            <br>
+            <input id="radio3" class="radiobutton" name="hoge" type="radio" value="ウ" />
+            <label for="radio3">ウ</label><%= web[0]["sen3"] %>
+            <br>
+            <br>
+            <br>
+            <br>
+            <input id="radio4" class="radiobutton" name="hoge" type="radio" value="ェ" />
+            <label for="radio4">エ</label><%= web[0]["sen4"] %>
+            <br>
+            <br>
+            <br>
+            <input type = "submit"class="s" name="kaitou1" value ="回答を送る" >
+        </div>
+        </form>
+        <script>
+            var socket = io();
+            var f = document.forms.myform1;
+            var myname = document.getElementById("myid2");
+            var m1 = myname.innerText;
+
+            f.kaitou1.addEventListener('click',function(e){
+                e.preventDefault();
+                let checkvalue = f.elements['hoge'].value;
+                socket.emit('kiroku',m1,checkvalue);
+            })
+
+            socket.on('owari',function(){
+                window.location.href ='/kaitou3?name=' + encodeURIComponent(myname.innerText);
+            })
+        </script>
+    </body>
+</html>
