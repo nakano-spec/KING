@@ -40,8 +40,8 @@ var app = express();
 const db_conf ={
   host :'localhost',
   user :'root',
-  password :'20021225',
-  database :'mydb',
+  password :'20010426',
+  database :'mydb2',
 }
 const pool = mysql.createPoolCluster();
 pool.add('MASTER',db_conf);

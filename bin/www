@@ -107,8 +107,8 @@ const { namespace } = require('store');
    const mysql_setting = {
      host: 'localhost',
      user: 'root',
-     password: '20021225',
-     database: 'mydb'
+     password: '20010426',
+     database: 'mydb2'
    }
    const connection = mysql.createConnection(mysql_setting);
    connection.connect();
@@ -396,10 +396,10 @@ const { namespace } = require('store');
      socket.on('login_btnclick', (login_name,login_pass1) => {
            
            if(login_pass1 != '') {
-             var login_select1 = "select username from users where username = ?;"
-             var login_select2 = "select password from users where password = ?;"
-             var login_select3 = "select password from users where username = ?;"
-             var login_select4 = "select user_ID from users where username = ?;"
+             var login_select1 = "select username from user_table where username = ?;"
+             var login_select2 = "select password from user_table where password = ?;"
+             var login_select3 = "select password from user_table where username = ?;"
+             var login_select4 = "select user_type from user_table where username = ?;"
              connection.query(login_select1,login_name,(err, login_result1, fields) => {
                if(err){
                  console.log(err);
@@ -427,7 +427,7 @@ const { namespace } = require('store');
                            io.to(token).emit('new_flug',new_flug);
                          }
    
-                         if(login_result4[0].user_ID < 100)
+                         if(login_result4[0].user_type = 0)
                          {
                            var login_flug = 1;
                            io.to(socket.id).emit('login_flug',login_flug,login_name);
