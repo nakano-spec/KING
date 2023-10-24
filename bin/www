@@ -101,7 +101,7 @@
  const mysql = require('mysql2');
  const store = require('store');
  const { connect } = require('http2');
-const { namespace } = require('store');
+ const { namespace } = require('store');
  
  io.on('connection', (socket) => {//ページが繋がったとき
    const mysql_setting = {
@@ -392,14 +392,15 @@ const { namespace } = require('store');
      socket.on('kekkahyouji',()=>{
          io.emit('kekkahyouji2');
      })
+     
      // login
      socket.on('login_btnclick', (login_name,login_pass1) => {
            
            if(login_pass1 != '') {
-             var login_select1 = "select username from user_table where username = ?;"
+             var login_select1 = "select user_name from user_table where user_name = ?;"
              var login_select2 = "select password from user_table where password = ?;"
-             var login_select3 = "select password from user_table where username = ?;"
-             var login_select4 = "select user_type from user_table where username = ?;"
+             var login_select3 = "select password from user_table where user_name = ?;"
+             var login_select4 = "select user_type from user_table where user_name = ?;"
              connection.query(login_select1,login_name,(err, login_result1, fields) => {
                if(err){
                  console.log(err);
@@ -412,7 +413,7 @@ const { namespace } = require('store');
                    var new_flug = 0;
                    io.emit('new_flug',new_flug);
                  }
-                 if(login_result1.length >= 1 && login_result2.length >= 1) {
+                 if(login_result1.length >= 0  && login_result2.length >= 0) {
                    connection.query(login_select3,login_name,(err, login_result3, fields) => {
                      if(login_result3[0].password == login_pass1) {
                        if(err){
@@ -427,15 +428,15 @@ const { namespace } = require('store');
                            io.to(token).emit('new_flug',new_flug);
                          }
    
-                         if(login_result4[0].user_type = 0)
+                         if(login_result4[0].user_type == 0)
                          {
                            var login_flug = 1;
                            io.to(socket.id).emit('login_flug',login_flug,login_name);
-                         }else if(login_result4[0].user_ID > 100 && login_result4[0].user_ID < 9999)
+                         }else if(login_result4[0].user_type == 1)
                          {
                            var login_flug = 1;
                            io.to(socket.id).emit('login_flug1',login_flug,login_name);
-                         }else if(login_result4[0].user_ID > 10000)
+                         }else if(login_result4[0].user_type == 2)
                          {
                            var login_flug = 1;
                            io.to(socket.id).emit('login_flug2',login_flug,login_name);

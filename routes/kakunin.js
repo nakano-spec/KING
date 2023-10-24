@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
    var app = req.app;
    var poolCluster = app.get("pool");
    var pool = poolCluster.of('MASTER')
-   var sql4 = "select m.name,m.mondaibun,m.sen1,m.sen2,m.sen3,m.sen4,s.seikai from mondai_LIST m,seikai_LIST s where name = ? and m.seikai_ID = s.seikai_ID and m.mon_ID = s.mon_ID;"
+   var sql4 = "select q.question_name,q.question_text,s.select_1,s.select_2,s.select_3,s.select_4,c.answer from question_table q,correct_table c,select_table s where question_name = ? and q.question_ID = s.question_ID and q.question_ID = c.question_ID;"
    pool.getConnection(function(err,connection){
     connection.query(sql4,data1,(err,result,fields) =>{
         if(err){
