@@ -17,6 +17,7 @@
  
  
  
+ 
  /**
   * Get port from environment and store in Express.
   */
@@ -107,8 +108,8 @@ const { namespace } = require('store');
    const mysql_setting = {
      host: 'localhost',
      user: 'root',
-     password: '20021225',
-     database: 'mydb'
+     password: 'Bonobo09040425',
+     database: 'mydb2'
    }
    const connection = mysql.createConnection(mysql_setting);
    connection.connect();
