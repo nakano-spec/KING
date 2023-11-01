@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
   var app = req.app;
   var poolCluster = app.get("pool");
   var pool = poolCluster.of('MASTER');
-  const sql1 = "select mon_ID from mondai_LIST where sentaku = '1';"
+  const sql1 = "select question_ID from question_table where sentaku = '1';"
   const sql2 = "insert into time_LIST(mon_ID,time) values(?,?);"
   pool.getConnection(function(err,connection) {
     if(err != null){
