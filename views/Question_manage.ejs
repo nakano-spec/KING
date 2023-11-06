@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Question Table</title>
+    <script>
+        // ページが読み込まれたら実行する関数
+        document.addEventListener('DOMContentLoaded', function() {
+            // APIからデータを取得する関数
+            fetch('/questions')
+                .then(response => response.json())
+                .then(data => {
+                    const table = document.getElementById('question_table');
+                    // 取得したデータでテーブルを構築
+                    data.forEach(question => {
+                        const row = table.insertRow();
+                        const nameCell = row.insertCell();
+                        const textCell = row.insertCell();
+                        nameCell.textContent = question.question_name;
+                        textCell.textContent = question.question_text;
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+</head>
+<body>
+    <table id="question_table">
+        <tr>
+            <th>Question Name</th>
+            <th>Question Text</th>
+        </tr>
+    </table>
+</body>
+</html>
