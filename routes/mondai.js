@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
         console.log(err);
       }
       var data = {
-        question_name:name1,
+        name:name1,
         web:result1
       }
       res.render('mondai2',data);

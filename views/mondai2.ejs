@@ -21,8 +21,8 @@
         </div>
         <p>問題を選択してください。</p>
         <select  name = "mo1" class="cp_sl02" required>
-           <% web.forEach((list) => { %>  <!-- error is here -->
-            <option><%= list.question_name %></option>  <!--カラム名をnameに入れる-->
+           <% web.forEach((list) => { %>
+            <option><%= list.question_name %></option> 
             <% }) %>
         </select>
         <span class="cp_sl02_highlight"></span>
