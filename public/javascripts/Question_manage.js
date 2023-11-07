@@ -7,10 +7,10 @@ const port = 3000;
 
 // データベース接続設定
 const connection = mysql.createConnection({
-  host: 'データベースのホスト',
-  user: 'ユーザー名',
-  password: 'パスワード',
-  database: 'データベース名'
+  host: 'http://localhost/phpmyadmin/',
+  user: 'root',
+  password: '20021225',
+  database: 'question_table'
 });
 
 // データベース接続

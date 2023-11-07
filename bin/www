@@ -115,11 +115,10 @@ const { namespace } = require('store');
    /*var pool = poolCluster.of('MASTER')*/
      socket.on('new_btnclick', (name,pass1,pass2) => {
        if(pass1 == pass2) {
-         var new_select1 = "select username from users where username = ?;"
-         var new_select2 = "select password from users where password = ?;"
-         var new_insert1 = "insert into users values (?,?,?,'2022{01>01','2022{01>01');"
-         var kensaku = "SELECT MIN(user_ID + 1100) AS user_ID FROM users WHERE (user_ID + 1100) NOT IN (SELECT user_ID FROM users);"
-         connection.query(new_select1,name,(err, new_result1, fields) => {
+         var login_select1 = "select user_name from user_table where user_name = ?;"
+         var login_select2 = "select password from user_table where password = ?;"
+         var login_select3 = "select password from user_table where user_name = ?;"
+         var login_select4 = "select user_type from user_table where user_neme = ?;"
            connection.query(new_select2,pass1,(err, new_result2, fields) => {
              if(new_result1.length < 1 && pass1.length >= 8 && pass1.length <= 16 && pass1.length != 0 && name.length >= 2 && name.length <= 10) {
                connection.query(kensaku,(err,kensaku1,fields)=>{
@@ -137,9 +136,9 @@ const { namespace } = require('store');
                })
              }
            })
-         })
+         }
        }
-     })
+     )
      
      
      socket.on('filedata',(data) =>{
