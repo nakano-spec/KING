@@ -83,6 +83,17 @@ input select textarea{
   text-align: center;
   padding: 10px;
 }
+
+.roomselect
+{
+  width: 40%;
+  height: 60px;
+  background-color: orange;
+  font-size: 20px;
+  text-align: center;
+  padding: 10px; 
+}
+
 .input-field-col-s6 > input{
   width: 250px;
   height: 30px;
