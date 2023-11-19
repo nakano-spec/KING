@@ -1,16 +1,6 @@
 var express = require('express');
 var router = express.Router();
 const mysql = require("mysql");
-/*const connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "20021225",
-    database: "mydb"
-});*/
-
-//connection.connect();
-
-
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -25,7 +15,6 @@ router.get('/', function(req, res, next) {
       console.log(err);
       return;
     }
-
     connection.query(sql1,(err,result,fields) =>{
       if(err){
         console.log(err);

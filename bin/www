@@ -14,6 +14,9 @@
  var fs = require('fs');
  var poolCluster = app.get('pool');
  var async = require('async');
+ var crypto = require('crypto');
+ const sha512 = crypto.createHash('sha512');
+ const encoding = 'hex';
  
  
  
@@ -110,11 +113,18 @@
      password: '20010426',
      database: 'mydb2'
    }
+
    const connection = mysql.createConnection(mysql_setting);
    connection.connect();
-   /*var pool = poolCluster.of('MASTER')*/
-     socket.on('new_btnclick', (name,pass1,pass2) => {
-       if(pass1 == pass2) {
+
+   socket.on('crypto1',(data) =>{
+    sha512.update(data);
+    var sha512Hash = sha512.digest(encoding);
+    io.emit('crypto',sha512Hash); 
+  })
+
+  socket.on('new_btnclick', (name,pass1,pass2) => {
+      if(pass1 == pass2) {
          var new_select1 = "select username from users where username = ?;"
          var new_select2 = "select password from users where password = ?;"
          var new_insert1 = "insert into users values (?,?,?,'2022{01>01','2022{01>01');"
@@ -140,8 +150,7 @@
          })
        }
      })
-     
-     
+
      socket.on('filedata',(data) =>{
       var q1 = "insert into mondai_LIST values(?,?,?,?,?,?,?,?,?,?,?);"
       var q2 = "select MIN(mon_ID  + 1) AS mon_ID from mondai_LIST where (mon_ID + 1) NOT IN (SELECT mon_ID from mondai_LIST);"
@@ -401,6 +410,7 @@
              var login_select2 = "select password from user_table where password = ?;"
              var login_select3 = "select password from user_table where user_name = ?;"
              var login_select4 = "select user_type from user_table where user_name = ?;"
+             var login_insert = "insert into loginlog(room_ID,user_ID) values(?,?)"
              connection.query(login_select1,login_name,(err, login_result1, fields) => {
                if(err){
                  console.log(err);
@@ -428,15 +438,15 @@
                            io.to(token).emit('new_flug',new_flug);
                          }
    
-                         if(login_result4[0].user_type == 0)
+                         if(login_result4[0].user_type == 1)
                          {
                            var login_flug = 1;
                            io.to(socket.id).emit('login_flug',login_flug,login_name);
-                         }else if(login_result4[0].user_type == 1)
+                         }else if(login_result4[0].user_type == 2)
                          {
                            var login_flug = 1;
                            io.to(socket.id).emit('login_flug1',login_flug,login_name);
-                         }else if(login_result4[0].user_type == 2)
+                         }else if(login_result4[0].user_type == 3)
                          {
                            var login_flug = 1;
                            io.to(socket.id).emit('login_flug2',login_flug,login_name);
@@ -451,37 +461,37 @@
                })
            })
          }
-       })
+      })
    
-           socket.on('owa2',() =>{
-             io.emit('owari');
-           })
+      socket.on('owa2',() =>{
+         io.emit('owari');
+      })
    
-       socket.on('mondai_btnclick',(mondai,o) => {
+      socket.on('mondai_btnclick',(mondai,o) => {
        
-         if(mondai != ''){
-           var pool = poolCluster.of('MASTER');
-           var mondai_select = "select mon_ID,mondaibun from mondai_LIST where sentaku = 1;"
-           let mondai_sentaku = "update mondai_LIST set sentaku = '1' where name = ?;"
-           let sql3 = "insert into monhan_LIST values(?,?);"
-           let sql4 = "select han_ID from hankeisiki_LIST where han_keisiki = ?;"
-           pool.getConnection(function(err,connection){
-             if(err != null){
-               console.log(err);
-               return;
-             }
-             connection.query(mondai_sentaku,mondai,(err,mondai_result,fields) =>{
-               console.log(err);
-               connection.query(mondai_select,(err,mondai_result2,fields)=>{
-                 if(err){
+        if(mondai != ''){
+          var pool = poolCluster.of('MASTER');
+          var mondai_select = "select q.question_ID,r.room_ID from question_table q room_table r  where q.question_name = ?;"
+          let mondai_sentaku = "update mondai_LIST set sentaku = '1' where name = ?;"
+          let sql3 = "insert into monhan_LIST values(?,?);"
+          let sql4 = "select han_ID from hankeisiki_LIST where han_keisiki = ?;"
+          pool.getConnection(function(err,connection){
+            if(err != null){
+              console.log(err);
+              return;
+            }
+            connection.query(mondai_sentaku,mondai,(err,mondai_result,fields) =>{
+              console.log(err);
+              connection.query(mondai_select,(err,mondai_result2,fields)=>{
+                if(err){
                  var flag = 0;
                  io.emit('mondai_kekka',flag);
-               }
-               connection.commit((err) =>{
+                }
+                connection.commit((err) =>{
                  if(err){connection.rollback(() =>{throw console.log('error');});}
-               })
-               var ID = mondai_result2[0].mon_ID;
-               connection.query(sql4,o,(err,result,fields) =>{
+                })
+                var ID = mondai_result2[0].mon_ID;
+                connection.query(sql4,o,(err,result,fields) =>{
                  if(err){
                    console.log(err);
                  }

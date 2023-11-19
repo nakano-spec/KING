@@ -41,10 +41,11 @@
                   <input type="submit" name="button" value="ログイン" class="s"></button>
             </form>
         </table>
-        <div class = "su">
-          <br>
-          <button class = "sinki"onclick="location.href='/new_player'">新規登録</button>
-        </div>
+        <select name = "select1" required style = "width: 30%;height: 50px;font-size: 20px;text-align: center;padding: 10px;position: relative;top: 10px;">
+            <% data.forEach((list) => { %>
+              <option><%= list.user_name %></option>
+            <% }) %>
+        </select>
     </div>
     <div class="container">
     <ul id="mondai"></ul><!--socketでメッセ表示するところ-->

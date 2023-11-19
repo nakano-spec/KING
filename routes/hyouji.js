@@ -8,15 +8,9 @@ const async = require('async');
 router.get("/", (req, res)=>{
     var app = req.app;
     var poolCluster = app.get('pool');
-    var pool = poolCluster.of
     var pool = poolCluster.of('MASTER');
-    /*const sql = "select mon_ID,mondaibun from mondai_LIST where sentaku = '1';"
-    const sql2 = "select time from time_LIST where mon_ID = ?"*/
     const sql3 = "select m.mon_ID,m.mondaibun,m.picturename,t.time from mondai_LIST m,time_LIST t where sentaku = '1' and m.mon_ID = t.mon_ID";
     const sql4 = "select sentaku from mondai_LIST;"
-    /*var bun = 0;
-    var name1 = 0;
-    var time1 = 0;*/
     pool.getConnection(function(err,connection){
         connection.query(sql4,(err,result2,fields)=>{
             if(err){
