@@ -1,35 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>Question Table</title>
-    <script>
-        // ページが読み込まれたら実行する関数
-        document.addEventListener('DOMContentLoaded', function() {
-            // APIからデータを取得する関数
-            fetch('/questions')
-                .then(response => response.json())
-                .then(data => {
-                    const table = document.getElementById('question_table');
-                    // 取得したデータでテーブルを構築
-                    data.forEach(question => {
-                        const row = table.insertRow();
-                        const nameCell = row.insertCell();
-                        const textCell = row.insertCell();
-                        nameCell.textContent = question.question_name;
-                        textCell.textContent = question.question_text;
-                    });
-                })
-                .catch(error => console.error('Error:', error));
-        });
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>問題管理システム</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .header {
+    background-color: #FFA07A;
+    padding: 10px;
+    text-align: center;
+  }
+  .button {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+  }
+  .search-box {
+    padding: 10px 20px;
+  }
+  .search-button {
+    cursor: pointer;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  th {
+    background-color: #FFDAB9;
+  }
+  .radio-button {
+    margin-right: 15px;
+  }
+</style>
 </head>
 <body>
-    <table id="question_table">
-        <tr>
-            <th>Question Name</th>
-            <th>Question Text</th>
-        </tr>
-    </table>
+
+<div class="header">
+  <h1>問題管理システム</h1>
+</div>
+
+<div>
+  <button class="button">新規作成</button>
+  <button class="button">選択した問題の編集</button>
+  <button class="button">選択した問題の削除</button>
+  <input type="text" placeholder="検索..." class="search-box">
+  <button class="search-button">🔎</button>
+</div>
+
+<table>
+  <tr>
+    <th>問題名</th>
+    <th>問題文</th>
+  </tr>
+  <tr>
+    <td><input type="radio" class="radio-button">SQL</td>
+    <td>SQLとは何の略称でしょうか？</td>
+  </tr>
+  <!-- その他の行は、データに応じて追加 -->
+</table>
+
 </body>
 </html>
+
