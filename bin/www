@@ -4,546 +4,546 @@
  * Module dependencies.
  */
 
- var app = require('../app');
- var debug = require('debug')('sotuken:server');
- var http = require('http');
- var express = require('express');
- const path = require('path');
- var ExcelJS = require('exceljs');
- var validator = require('validator');
- var fs = require('fs');
- var poolCluster = app.get('pool');
- var async = require('async');
- 
- 
- 
- /**
-  * Get port from environment and store in Express.
-  */
- 
- var port = normalizePort(process.env.PORT || '3000');
- app.set('port', port);
- 
- /**
-  * Create HTTP server.
-  */
- var server = http.createServer(app);
- var { Server } =require("socket.io");
- var io = new Server(server);
- /**
-  * Listen on provided port, on all network interfaces.
-  */
- 
- server.listen(port,'0.0.0.0', () => {console.log('サーバ起動しました。\nlistening on "[このサーバ機のIPアドレス]:3000"');});
- server.on('error', onError);
- server.on('listening', onListening);
- 
- /**
-  * Normalize a port into a number, string, or false.
-  */
- 
- function normalizePort(val) {
-   var port = parseInt(val, 10);
- 
-   if (isNaN(port)) {
-     // named pipe
-     return val;
-   }
- 
-   if (port >= 0) {
-     // port number
-     return port;
-   }
- 
-   return false;
- }
- 
- /**
-  * Event listener for HTTP server "error" event.
-  */
- 
- function onError(error) {
-   if (error.syscall !== 'listen') {
-     throw error;
-   }
- 
-   var bind = typeof port === 'string'
-     ? 'Pipe ' + port
-     : 'Port ' + port;
- 
-   // handle specific listen errors with friendly messages
-   switch (error.code) {
-     case 'EACCES':
-       console.error(bind + ' requires elevated privileges');
-       process.exit(1);
-       break;
-     case 'EADDRINUSE':
-       console.error(bind + ' is already in use');
-       process.exit(1);
-       break;
-     default:
-       throw error;
-   }
- }
- 
- /**
-  * Event listener for HTTP server "listening" event.
-  */
- 
- function onListening() {
-   var addr = server.address();
-   var bind = typeof addr === 'string'
-     ? 'pipe ' + addr
-     : 'port ' + addr.port;
-   debug('Listening on ' + bind);
- }
- 
- const mysql = require('mysql2');
- const store = require('store');
- const { connect } = require('http2');
-const { namespace } = require('store');
- 
- io.on('connection', (socket) => {//ページが繋がったとき
-   const mysql_setting = {
-     host: 'localhost',
-     user: 'root',
-     password: '20021225',
-     database: 'mydb'
-   }
-   const connection = mysql.createConnection(mysql_setting);
-   connection.connect();
-   /*var pool = poolCluster.of('MASTER')*/
-     socket.on('new_btnclick', (name,pass1,pass2) => {
-       if(pass1 == pass2) {
-         var login_select1 = "select user_name from user_table where user_name = ?;"
-         var login_select2 = "select password from user_table where password = ?;"
-         var login_select3 = "select password from user_table where user_name = ?;"
-         var login_select4 = "select user_type from user_table where user_neme = ?;"
-           connection.query(new_select2,pass1,(err, new_result2, fields) => {
-             if(new_result1.length < 1 && pass1.length >= 8 && pass1.length <= 16 && pass1.length != 0 && name.length >= 2 && name.length <= 10) {
-               connection.query(kensaku,(err,kensaku1,fields)=>{
-                 if(err){
-                   console.log(err);
-                 }
-                 var user = kensaku1[0].user_ID;
-                 connection.query(new_insert1,[user,name,pass1],(err, new_result3, fields) => {
-                   if(err){
-                     console.log(err);
-                   }
-                   var new_flug = 1;
-                   io.emit('new_flug',new_flug);
-               })
-               })
-             }
-           })
-         }
-       }
-     )
-     
-     
-     socket.on('filedata',(data) =>{
-      var q1 = "insert into mondai_LIST values(?,?,?,?,?,?,?,?,?,?,?);"
-      var q2 = "select MIN(mon_ID  + 1) AS mon_ID from mondai_LIST where (mon_ID + 1) NOT IN (SELECT mon_ID from mondai_LIST);"
-      var q3 = "select MIN(seikai_ID  + 1) AS seikai_ID from seikai_LIST where (seikai_ID + 1) NOT IN (SELECT seikai_ID from seikai_LIST);"
-      var q4 = "insert into seikai_LIST values(?,?,?);"
-      var da = "a";
-      var moni = 0;
-      var name = data[0];
-      var mondaibun = data[1];
-      var sen1 = data[2];
-      var sen2 = data[3];
-      var sen3 = data[4];
-      var sen4 = data[5];
-      var seikai = data[6];
-      var seiID = 0;
-      var kaiID = 0;
-      if(data[7] != "なし"){
-        var picture = data[7];
-      }else{
-        var picture = "";
-      }
-      connection.query(q2,(err,result,field)=>{
-        if(err){
-          console.log(err);
-        }
-        moni = result[0].mon_ID;
-        if(sen1 == "なし"){
-          sen1 = "";
-          sen2 = "";
-          sen3 = "";
-          sen4 = "";
-          kaiID = 1;
-        }
-        connection.query(q3,(err,result2,field)=>{
-            if(err){
-              console.log(err);
-            }
-            seiID = result2[0].seikai_ID;
-            connection.query(q4,[seiID,moni,seikai],(err,result3,field)=>{
-              if(err){
-                console.log(err);
-              }
-              connection.query(q1,[moni,name,mondaibun,sen1,sen2,sen3,sen4,seiID,0,picture,kaiID],(err,res1,fields)=>{
-                if(err){
-                  console.log(err);
-                }
-                connection.commit((err) =>{
-                  if(err){connection.rollback(() =>{throw console.log('error');});};
-                  io.emit('kanryou');
-            })
-            })
-          })
-      })
-    })  
-    })
-    
-    socket.on('kekkasyusei',(set1)=>{
-      var sql1 = "select user_ID from users where username = ?;"
-      var sql2 = "update kaitou_LIST set han = ? where user_ID =?;"
-      var d = "a";
-      var e = 0;
-      for(var i = 0;i<set1.length;i++){
-        connection.query(sql1,set1[e][0],(err,result,fields)=>{
-        if(err){
-          console.log(err);
-        }
-        console.log(result);
-        console.log(e);
-        d = set1[e][1];
-        console.log(d);
-        e = e + 1;
-        connection.query(sql2,[d,result[0].user_ID],(err,result2,field)=>{
-          if(err){
-            console.log(err);
-          }
-          console.log(result2);
-        })
-      })
-      }
-      connection.commit((err)=>{
-        if(err){connection.rollback(()=>{throw console.log('error');});};
-        io.emit('kekkahyouji2');
-      })
-    })
+var app = require('../app');
+var debug = require('debug')('sotuken:server');
+var http = require('http');
+var express = require('express');
+const path = require('path');
+var ExcelJS = require('exceljs');
+var validator = require('validator');
+var fs = require('fs');
+var poolCluster = app.get('pool');
+var async = require('async');
 
-     socket.on('kaitoutuika',(array)=>{
-       var sql = "SELECT MIN(seikai_ID + 1) AS seikai_ID FROM seikai_LIST WHERE (seikai_ID+ 1) NOT IN (SELECT seikai_ID FROM seikai_LIST);"
-       var sql2 = "insert into seikai_LIST values(?,?,?);"
-       var sql3 = "update kaitou_LIST set han = '○' where kai =?;"
-       var e = 0;
-       var f = "a";
-       var g = "a";
-       console.log(array);
-       async.waterfall([
-        function(callback){
-          for(var i = 0;i<array.length ;i++){
-            connection.query(sql,(err,result,field)=>{
-              if(err){
-                console.log(err);
-              }
-              f = array[e]
-              g = array[e + 1]
-              console.log(g);
-              connection.query(sql2,[result[0].seikai_ID,f,g],(err,result2,fields)=>{
+
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+var server = http.createServer(app);
+var { Server } =require("socket.io");
+var io = new Server(server);
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port,'0.0.0.0', () => {console.log('サーバ起動しました。\nlistening on "[このサーバ機のIPアドレス]:3000"');});
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
+
+const mysql = require('mysql2');
+const store = require('store');
+const { connect } = require('http2');
+const { namespace } = require('store');
+
+io.on('connection', (socket) => {//ページが繋がったとき
+  const mysql_setting = {
+    host: 'localhost',
+    user: 'root',
+    password: '20021225',
+    database: 'mydb'
+  }
+  const connection = mysql.createConnection(mysql_setting);
+  connection.connect();
+  /*var pool = poolCluster.of('MASTER')*/
+    socket.on('new_btnclick', (name,pass1,pass2) => {
+      if(pass1 == pass2) {
+        var login_select1 = "select user_name from user_table where user_name = ?;"
+        var login_select2 = "select password from user_table where password = ?;"
+        var login_select3 = "select password from user_table where user_name = ?;"
+        var login_select4 = "select user_type from user_table where user_neme = ?;"
+          connection.query(new_select2,pass1,(err, new_result2, fields) => {
+            if(new_result1.length < 1 && pass1.length >= 8 && pass1.length <= 16 && pass1.length != 0 && name.length >= 2 && name.length <= 10) {
+              connection.query(kensaku,(err,kensaku1,fields)=>{
                 if(err){
                   console.log(err);
                 }
-                connection.query(sql3,g,(err,result3,field)=>{
+                var user = kensaku1[0].user_ID;
+                connection.query(new_insert1,[user,name,pass1],(err, new_result3, fields) => {
                   if(err){
                     console.log(err);
                   }
-                  e = e + 1;
-                })
+                  var new_flug = 1;
+                  io.emit('new_flug',new_flug);
+              })
+              })
+            }
+          })
+        }
+      }
+    )
+    
+    
+    socket.on('filedata',(data) =>{
+     var q1 = "insert into mondai_LIST values(?,?,?,?,?,?,?,?,?,?,?);"
+     var q2 = "select MIN(mon_ID  + 1) AS mon_ID from mondai_LIST where (mon_ID + 1) NOT IN (SELECT mon_ID from mondai_LIST);"
+     var q3 = "select MIN(seikai_ID  + 1) AS seikai_ID from seikai_LIST where (seikai_ID + 1) NOT IN (SELECT seikai_ID from seikai_LIST);"
+     var q4 = "insert into seikai_LIST values(?,?,?);"
+     var da = "a";
+     var moni = 0;
+     var name = data[0];
+     var mondaibun = data[1];
+     var sen1 = data[2];
+     var sen2 = data[3];
+     var sen3 = data[4];
+     var sen4 = data[5];
+     var seikai = data[6];
+     var seiID = 0;
+     var kaiID = 0;
+     if(data[7] != "なし"){
+       var picture = data[7];
+     }else{
+       var picture = "";
+     }
+     connection.query(q2,(err,result,field)=>{
+       if(err){
+         console.log(err);
+       }
+       moni = result[0].mon_ID;
+       if(sen1 == "なし"){
+         sen1 = "";
+         sen2 = "";
+         sen3 = "";
+         sen4 = "";
+         kaiID = 1;
+       }
+       connection.query(q3,(err,result2,field)=>{
+           if(err){
+             console.log(err);
+           }
+           seiID = result2[0].seikai_ID;
+           connection.query(q4,[seiID,moni,seikai],(err,result3,field)=>{
+             if(err){
+               console.log(err);
+             }
+             connection.query(q1,[moni,name,mondaibun,sen1,sen2,sen3,sen4,seiID,0,picture,kaiID],(err,res1,fields)=>{
+               if(err){
+                 console.log(err);
+               }
+               connection.commit((err) =>{
+                 if(err){connection.rollback(() =>{throw console.log('error');});};
+                 io.emit('kanryou');
+           })
+           })
+         })
+     })
+   })  
+   })
+   
+   socket.on('kekkasyusei',(set1)=>{
+     var sql1 = "select user_ID from users where username = ?;"
+     var sql2 = "update kaitou_LIST set han = ? where user_ID =?;"
+     var d = "a";
+     var e = 0;
+     for(var i = 0;i<set1.length;i++){
+       connection.query(sql1,set1[e][0],(err,result,fields)=>{
+       if(err){
+         console.log(err);
+       }
+       console.log(result);
+       console.log(e);
+       d = set1[e][1];
+       console.log(d);
+       e = e + 1;
+       connection.query(sql2,[d,result[0].user_ID],(err,result2,field)=>{
+         if(err){
+           console.log(err);
+         }
+         console.log(result2);
+       })
+     })
+     }
+     connection.commit((err)=>{
+       if(err){connection.rollback(()=>{throw console.log('error');});};
+       io.emit('kekkahyouji2');
+     })
+   })
+
+    socket.on('kaitoutuika',(array)=>{
+      var sql = "SELECT MIN(seikai_ID + 1) AS seikai_ID FROM seikai_LIST WHERE (seikai_ID+ 1) NOT IN (SELECT seikai_ID FROM seikai_LIST);"
+      var sql2 = "insert into seikai_LIST values(?,?,?);"
+      var sql3 = "update kaitou_LIST set han = '○' where kai =?;"
+      var e = 0;
+      var f = "a";
+      var g = "a";
+      console.log(array);
+      async.waterfall([
+       function(callback){
+         for(var i = 0;i<array.length ;i++){
+           connection.query(sql,(err,result,field)=>{
+             if(err){
+               console.log(err);
+             }
+             f = array[e]
+             g = array[e + 1]
+             console.log(g);
+             connection.query(sql2,[result[0].seikai_ID,f,g],(err,result2,fields)=>{
+               if(err){
+                 console.log(err);
+               }
+               connection.query(sql3,g,(err,result3,field)=>{
+                 if(err){
+                   console.log(err);
+                 }
+                 e = e + 1;
+               })
+             })
+           })
+         }
+         setTimeout(function(){
+           callback(null,1);
+         },1000);
+       },
+       function(callback){
+         io.emit('yomikomi');
+       }
+      ])
+    })
+  
+    socket.on('kaitousakuzyo',(array)=>{
+      var sql = "delete from seikai_LIST where seikai = ?;"
+      var sql2 = "update kaitou_LIST set han = '✕' where kai =?;"
+      var l = 0;
+      var g = "a";
+      console.log(array);
+      async.waterfall([
+        function(callback){
+          for(var i = 0;i<array.length;i++){
+            g = array[l]
+            connection.query(sql,g,(err,result,field)=>{
+              if(err){
+                console.log(err);
+              }
+              l = l+1;
+              connection.query(sql2,g,(err,result2,field)=>{
+                if(err){
+                  console.log(err);
+                }
               })
             })
           }
-          setTimeout(function(){
+          setTimeout(function() {
             callback(null,1);
-          },1000);
+          }, 1000);
         },
         function(callback){
           io.emit('yomikomi');
         }
-       ])
-     })
-   
-     socket.on('kaitousakuzyo',(array)=>{
-       var sql = "delete from seikai_LIST where seikai = ?;"
-       var sql2 = "update kaitou_LIST set han = '✕' where kai =?;"
-       var l = 0;
-       var g = "a";
-       console.log(array);
-       async.waterfall([
-         function(callback){
-           for(var i = 0;i<array.length;i++){
-             g = array[l]
-             connection.query(sql,g,(err,result,field)=>{
-               if(err){
-                 console.log(err);
-               }
-               l = l+1;
-               connection.query(sql2,g,(err,result2,field)=>{
-                 if(err){
-                   console.log(err);
-                 }
-               })
-             })
-           }
-           setTimeout(function() {
-             callback(null,1);
-           }, 1000);
-         },
-         function(callback){
-           io.emit('yomikomi');
-         }
-       ])
-     })
-     
-     socket.on('montuika',(array)=>{
-      var q1 = "insert into mondai_LIST values(?,?,?,?,?,?,?,?,?,?,?);"
-      var q2 = "select MIN(mon_ID  + 1) AS mon_ID from mondai_LIST where (mon_ID + 1) NOT IN (SELECT mon_ID from mondai_LIST);"
-      var q3 = "select MIN(seikai_ID  + 1) AS seikai_ID from seikai_LIST where (seikai_ID + 1) NOT IN (SELECT seikai_ID from seikai_LIST);"
-      var q4 = "insert into seikai_LIST values(?,?,?);"
-      var da = "a";
-      console.log(array);
-      var moni = 0;
-      var name = array[0];
-      var mondaibun = array[1];
-      var sen1 = array[2];
-      var sen2 = array[3];
-      var sen3 = array[4];
-      var sen4 = array[5];
-      var seikai = array[6];
-      var seiID = 0;
-      var kaiID = 0;
-      if(sen1 == "なし"){
-        sen1 = "";
-        sen2 = "";
-        sen3 = "";
-        sen4 = "";
-        kaiID = 1;
-      }
-      if(array[7] != "なし"){
-        var picture = array[7];
-      }else{
-        var picture = "";
-      }
-      connection.query(q2,(err,res,field)=>{
-        if(err){
-          console.log(err);
-        }
-        moni = res[0].mon_ID;
-        connection.query(q3,(err,res2,field)=>{
-          if(err){
-            console.log(err);
-          }
-          seiID = res2[0].seikai_ID;
-          connection.query(q4,[seiID,moni,seikai],(err,res3,field)=>{
-            if(err){
-              console.log(err);
-            }
-            connection.query(q1,[moni,name,mondaibun,sen1,sen2,sen3,sen4,seiID,0,picture,kaiID],(err,res4,field)=>{
-              if(err){
-                console.log(err);
-              }
-              connection.commit((err) =>{
-                if(err){connection.rollback(() =>{throw console.log('error');});};
-                io.emit('kanryou');
-              })  
-            })
-          })
-        })
-      })
+      ])
     })
     
-     socket.on('syokika',()=>{
-        var sql1="truncate table time_LIST;"
-        var sql2="truncate table kaitou_LIST;"
-        var sql3="update mondai_LIST set sentaku= 0 where sentaku = 1"
-        var sql4 = "truncate table monhan_LIST";
-        connection.query(sql1,(err,result1,fields)=>{
+    socket.on('montuika',(array)=>{
+     var q1 = "insert into mondai_LIST values(?,?,?,?,?,?,?,?,?,?,?);"
+     var q2 = "select MIN(mon_ID  + 1) AS mon_ID from mondai_LIST where (mon_ID + 1) NOT IN (SELECT mon_ID from mondai_LIST);"
+     var q3 = "select MIN(seikai_ID  + 1) AS seikai_ID from seikai_LIST where (seikai_ID + 1) NOT IN (SELECT seikai_ID from seikai_LIST);"
+     var q4 = "insert into seikai_LIST values(?,?,?);"
+     var da = "a";
+     console.log(array);
+     var moni = 0;
+     var name = array[0];
+     var mondaibun = array[1];
+     var sen1 = array[2];
+     var sen2 = array[3];
+     var sen3 = array[4];
+     var sen4 = array[5];
+     var seikai = array[6];
+     var seiID = 0;
+     var kaiID = 0;
+     if(sen1 == "なし"){
+       sen1 = "";
+       sen2 = "";
+       sen3 = "";
+       sen4 = "";
+       kaiID = 1;
+     }
+     if(array[7] != "なし"){
+       var picture = array[7];
+     }else{
+       var picture = "";
+     }
+     connection.query(q2,(err,res,field)=>{
+       if(err){
+         console.log(err);
+       }
+       moni = res[0].mon_ID;
+       connection.query(q3,(err,res2,field)=>{
          if(err){
            console.log(err);
          }
-         connection.query(sql2,(err,result2,fields)=>{
+         seiID = res2[0].seikai_ID;
+         connection.query(q4,[seiID,moni,seikai],(err,res3,field)=>{
            if(err){
              console.log(err);
            }
-           connection.query(sql3,(err,results2,fields)=>{
+           connection.query(q1,[moni,name,mondaibun,sen1,sen2,sen3,sen4,seiID,0,picture,kaiID],(err,res4,field)=>{
              if(err){
                console.log(err);
              }
-             connection.query(sql4,(err,result4,fields)=>{
-               if(err){
-                 console.log(err);
-               }
-               io.emit('modoru');
-             })
+             connection.commit((err) =>{
+               if(err){connection.rollback(() =>{throw console.log('error');});};
+               io.emit('kanryou');
+             })  
            })
          })
+       })
+     })
+   })
+   
+    socket.on('syokika',()=>{
+       var sql1="truncate table time_LIST;"
+       var sql2="truncate table kaitou_LIST;"
+       var sql3="update mondai_LIST set sentaku= 0 where sentaku = 1"
+       var sql4 = "truncate table monhan_LIST";
+       connection.query(sql1,(err,result1,fields)=>{
+        if(err){
+          console.log(err);
+        }
+        connection.query(sql2,(err,result2,fields)=>{
+          if(err){
+            console.log(err);
+          }
+          connection.query(sql3,(err,results2,fields)=>{
+            if(err){
+              console.log(err);
+            }
+            connection.query(sql4,(err,result4,fields)=>{
+              if(err){
+                console.log(err);
+              }
+              io.emit('modoru');
+            })
+          })
+        })
+       })
+    })
+  
+    socket.on('hyou',(c) =>{
+        io.emit('hyouji',c);
+      })
+  
+    socket.on('kekkahyouji',()=>{
+        io.emit('kekkahyouji2');
+    })
+    // login
+    socket.on('login_btnclick', (login_name,login_pass1) => {
+          
+          if(login_pass1 != '') {
+            var login_select1 = "select username from users where username = ?;"
+            var login_select2 = "select password from users where password = ?;"
+            var login_select3 = "select password from users where username = ?;"
+            var login_select4 = "select user_ID from users where username = ?;"
+            connection.query(login_select1,login_name,(err, login_result1, fields) => {
+              if(err){
+                console.log(err);
+                var new_flug = 0;
+                io.emit('new_flug',new_flug);
+              }
+              connection.query(login_select2,login_pass1,(err, login_result2, fields) => {
+                if(err){
+                  console.log(err);
+                  var new_flug = 0;
+                  io.emit('new_flug',new_flug);
+                }
+                if(login_result1.length >= 1 && login_result2.length >= 1) {
+                  connection.query(login_select3,login_name,(err, login_result3, fields) => {
+                    if(login_result3[0].password == login_pass1) {
+                      if(err){
+                        console.log(err);
+                        var new_flug = 0;
+                        io.emit('new_flug',new_flug);
+                      }
+                      connection.query(login_select4,login_name,(err,login_result4,fields) =>{
+                        if(err){
+                          console.log(err);
+                          var new_flug = 0;
+                          io.to(token).emit('new_flug',new_flug);
+                        }
+  
+                        if(login_result4[0].user_ID < 100)
+                        {
+                          var login_flug = 1;
+                          io.to(socket.id).emit('login_flug',login_flug,login_name);
+                        }else if(login_result4[0].user_ID > 100 && login_result4[0].user_ID < 9999)
+                        {
+                          var login_flug = 1;
+                          io.to(socket.id).emit('login_flug1',login_flug,login_name);
+                        }else if(login_result4[0].user_ID > 10000)
+                        {
+                          var login_flug = 1;
+                          io.to(socket.id).emit('login_flug2',login_flug,login_name);
+                        }
+                      })
+                    }else{
+                      var new_flug=0;
+                      io.to(socket.id).emit('new_flug',new_flug);
+                    }
+                  })
+                }
+              })
+          })
+        }
+      })
+  
+          socket.on('owa2',() =>{
+            io.emit('owari');
+          })
+  
+      socket.on('mondai_btnclick',(mondai,o) => {
+      
+        if(mondai != ''){
+          var pool = poolCluster.of('MASTER');
+          var mondai_select = "select mon_ID,mondaibun from mondai_LIST where sentaku = 1;"
+          let mondai_sentaku = "update mondai_LIST set sentaku = '1' where name = ?;"
+          let sql3 = "insert into monhan_LIST values(?,?);"
+          let sql4 = "select han_ID from hankeisiki_LIST where han_keisiki = ?;"
+          pool.getConnection(function(err,connection){
+            if(err != null){
+              console.log(err);
+              return;
+            }
+            connection.query(mondai_sentaku,mondai,(err,mondai_result,fields) =>{
+              console.log(err);
+              connection.query(mondai_select,(err,mondai_result2,fields)=>{
+                if(err){
+                var flag = 0;
+                io.emit('mondai_kekka',flag);
+              }
+              connection.commit((err) =>{
+                if(err){connection.rollback(() =>{throw console.log('error');});}
+              })
+              var ID = mondai_result2[0].mon_ID;
+              connection.query(sql4,o,(err,result,fields) =>{
+                if(err){
+                  console.log(err);
+                }
+                var han1 = result[0].han_ID;
+                connection.query(sql3,[ID,han1],(err,result,fields)=>{
+                  if(err){
+                    console.log(err);
+                  }
+                })
+              })
+              var flag = 1;
+              io.emit('mondai_kekka',flag);
+              })
+            })
+          })
+      }
+    })
+
+     socket.on('kiroku',(m1,kaitou1) =>{
+  
+      let monname = 'select m.mon_ID,s.seikai from mondai_LIST m ,seikai_LIST s where sentaku = 1 and m.mon_ID = s.mon_ID;'
+      let seikai = 'select kaitou from mondai_LIST where sentaku = 1;'
+      let tuika = 'insert into kaitou_LIST values(?,?,?,?);'
+      let userIDSELECT = 'select user_ID from users where username = ?;'
+      let update1 = "update kaitou_LIST set user_ID = ? where user_ID = '9999';"
+      var hantei = "✕";
+      connection.query(monname,(err,result,fields)=>{
+        if(err){
+          console.log(err);
+        }
+        var idi = result[0].mon_ID;
+        for(var i = 0;i<result.length;i++){
+          if(kaitou1 == result[i].seikai){
+            hantei = "○";
+          }
+        }
+          var addsqlparams = ['9999',idi,kaitou1,hantei];
+          connection.query(tuika,addsqlparams,(err,result,fields) =>{
+            if(err){
+            console.log(err);
+          }
+          connection.commit((err) =>{
+            if(err){connection.rollback(() =>{throw console.log('error');});}
+          })
+          connection.query(userIDSELECT,m1,(err,result_user,fields)=>{
+            if(err){
+              console.log(err);
+            }
+            var user_I = result_user[0].user_ID
+            connection.query(update1,user_I,(err,result_user2,fields)=>{
+              if(err){
+                console.log(err);
+              }
+              io.emit('owari');
+            })
+          })
+          })
         })
      })
-   
-     socket.on('hyou',(c) =>{
-         io.emit('hyouji',c);
-       })
-   
-     socket.on('kekkahyouji',()=>{
-         io.emit('kekkahyouji2');
-     })
-     // login
-     socket.on('login_btnclick', (login_name,login_pass1) => {
-           
-           if(login_pass1 != '') {
-             var login_select1 = "select username from users where username = ?;"
-             var login_select2 = "select password from users where password = ?;"
-             var login_select3 = "select password from users where username = ?;"
-             var login_select4 = "select user_ID from users where username = ?;"
-             connection.query(login_select1,login_name,(err, login_result1, fields) => {
-               if(err){
-                 console.log(err);
-                 var new_flug = 0;
-                 io.emit('new_flug',new_flug);
-               }
-               connection.query(login_select2,login_pass1,(err, login_result2, fields) => {
-                 if(err){
-                   console.log(err);
-                   var new_flug = 0;
-                   io.emit('new_flug',new_flug);
-                 }
-                 if(login_result1.length >= 1 && login_result2.length >= 1) {
-                   connection.query(login_select3,login_name,(err, login_result3, fields) => {
-                     if(login_result3[0].password == login_pass1) {
-                       if(err){
-                         console.log(err);
-                         var new_flug = 0;
-                         io.emit('new_flug',new_flug);
-                       }
-                       connection.query(login_select4,login_name,(err,login_result4,fields) =>{
-                         if(err){
-                           console.log(err);
-                           var new_flug = 0;
-                           io.to(token).emit('new_flug',new_flug);
-                         }
-   
-                         if(login_result4[0].user_ID < 100)
-                         {
-                           var login_flug = 1;
-                           io.to(socket.id).emit('login_flug',login_flug,login_name);
-                         }else if(login_result4[0].user_ID > 100 && login_result4[0].user_ID < 9999)
-                         {
-                           var login_flug = 1;
-                           io.to(socket.id).emit('login_flug1',login_flug,login_name);
-                         }else if(login_result4[0].user_ID > 10000)
-                         {
-                           var login_flug = 1;
-                           io.to(socket.id).emit('login_flug2',login_flug,login_name);
-                         }
-                       })
-                     }else{
-                       var new_flug=0;
-                       io.to(socket.id).emit('new_flug',new_flug);
-                     }
-                   })
-                 }
-               })
-           })
-         }
-       })
-   
-           socket.on('owa2',() =>{
-             io.emit('owari');
-           })
-   
-       socket.on('mondai_btnclick',(mondai,o) => {
-       
-         if(mondai != ''){
-           var pool = poolCluster.of('MASTER');
-           var mondai_select = "select mon_ID,mondaibun from mondai_LIST where sentaku = 1;"
-           let mondai_sentaku = "update mondai_LIST set sentaku = '1' where name = ?;"
-           let sql3 = "insert into monhan_LIST values(?,?);"
-           let sql4 = "select han_ID from hankeisiki_LIST where han_keisiki = ?;"
-           pool.getConnection(function(err,connection){
-             if(err != null){
-               console.log(err);
-               return;
-             }
-             connection.query(mondai_sentaku,mondai,(err,mondai_result,fields) =>{
-               console.log(err);
-               connection.query(mondai_select,(err,mondai_result2,fields)=>{
-                 if(err){
-                 var flag = 0;
-                 io.emit('mondai_kekka',flag);
-               }
-               connection.commit((err) =>{
-                 if(err){connection.rollback(() =>{throw console.log('error');});}
-               })
-               var ID = mondai_result2[0].mon_ID;
-               connection.query(sql4,o,(err,result,fields) =>{
-                 if(err){
-                   console.log(err);
-                 }
-                 var han1 = result[0].han_ID;
-                 connection.query(sql3,[ID,han1],(err,result,fields)=>{
-                   if(err){
-                     console.log(err);
-                   }
-                 })
-               })
-               var flag = 1;
-               io.emit('mondai_kekka',flag);
-               })
-             })
-           })
-       }
-     })
- 
-      socket.on('kiroku',(m1,kaitou1) =>{
-   
-       let monname = 'select m.mon_ID,s.seikai from mondai_LIST m ,seikai_LIST s where sentaku = 1 and m.mon_ID = s.mon_ID;'
-       let seikai = 'select kaitou from mondai_LIST where sentaku = 1;'
-       let tuika = 'insert into kaitou_LIST values(?,?,?,?);'
-       let userIDSELECT = 'select user_ID from users where username = ?;'
-       let update1 = "update kaitou_LIST set user_ID = ? where user_ID = '9999';"
-       var hantei = "✕";
-       connection.query(monname,(err,result,fields)=>{
-         if(err){
-           console.log(err);
-         }
-         var idi = result[0].mon_ID;
-         for(var i = 0;i<result.length;i++){
-           if(kaitou1 == result[i].seikai){
-             hantei = "○";
-           }
-         }
-           var addsqlparams = ['9999',idi,kaitou1,hantei];
-           connection.query(tuika,addsqlparams,(err,result,fields) =>{
-             if(err){
-             console.log(err);
-           }
-           connection.commit((err) =>{
-             if(err){connection.rollback(() =>{throw console.log('error');});}
-           })
-           connection.query(userIDSELECT,m1,(err,result_user,fields)=>{
-             if(err){
-               console.log(err);
-             }
-             var user_I = result_user[0].user_ID
-             connection.query(update1,user_I,(err,result_user2,fields)=>{
-               if(err){
-                 console.log(err);
-               }
-               io.emit('owari');
-             })
-           })
-           })
-         })
+
+     socket.on('all_commit',()=>{
+      connection.commit((err) =>{
+        if(err){connection.rollback(() =>{throw console.log('error');});}
+        connection.release();
       })
- 
-      socket.on('all_commit',()=>{
-       connection.commit((err) =>{
-         if(err){connection.rollback(() =>{throw console.log('error');});}
-         connection.release();
-       })
-      })
-   });
+     })
+  });

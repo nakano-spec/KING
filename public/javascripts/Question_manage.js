@@ -1,30 +1,34 @@
-// Node.jsとExpressを使用したサーバーサイドの例
-const express = require('express');
-const mysql = require('mysql');
+// MySQLモジュールのインポート
+const mysql = require('mysql2');
 
-const app = express();
-const port = 3000;
-
-// データベース接続設定
+// データベースへの接続設定
 const connection = mysql.createConnection({
-  host: 'http://localhost/phpmyadmin/',
+  host: 'localhost',
   user: 'root',
   password: '20021225',
-  database: 'question_table'
+  database: 'your_database_name'
 });
 
-// データベース接続
-connection.connect();
-
-app.get('/questions', (req, res) => {
-  // question_tableからデータを取得するクエリ
-  connection.query('SELECT question_name, question_text FROM question_table', (error, results, fields) => {
-    if (error) throw error;
-    // JSONとして結果を返す
-    res.json(results);
-  });
+// データベースへの接続
+connection.connect(err => {
+  if (err) {
+    console.error('データベースへの接続エラー: ' + err.stack);
+    return;
+  }
+  console.log('データベースに接続されました。');
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+// SQLクエリの実行
+connection.query('SELECT * FROM your_table_name', (err, results, fields) => {
+  if (err) {
+    console.error('クエリエラー: ' + err.stack);
+    connection.end();
+    return;
+  }
+
+  // 結果の処理
+  console.log(results);
+
+  // 接続の終了
+  connection.end();
 });
