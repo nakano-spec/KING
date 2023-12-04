@@ -1,34 +1,27 @@
-// MySQLモジュールのインポート
-const mysql = require('mysql2');
+const express = require('express');
+const mysql = require('mydb2');
+const app = express();
+const port = 3000;
 
-// データベースへの接続設定
+// データベース接続設定
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '20021225',
-  database: 'your_database_name'
+  database: 'mydb2'
 });
 
-// データベースへの接続
-connection.connect(err => {
-  if (err) {
-    console.error('データベースへの接続エラー: ' + err.stack);
-    return;
-  }
-  console.log('データベースに接続されました。');
+// APIエンドポイント
+app.get('/api/data', (req, res) => {
+  connection.query('SELECT * FROM mydb2', (err, results) => {
+    if (err) {
+      res.status(500).send('Database error');
+      return;
+    }
+    res.json(results);
+  });
 });
 
-// SQLクエリの実行
-connection.query('SELECT * FROM your_table_name', (err, results, fields) => {
-  if (err) {
-    console.error('クエリエラー: ' + err.stack);
-    connection.end();
-    return;
-  }
-
-  // 結果の処理
-  console.log(results);
-
-  // 接続の終了
-  connection.end();
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });

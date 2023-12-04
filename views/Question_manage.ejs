@@ -43,6 +43,17 @@
   }
 </style>
 </head>
+<script>
+  function fetchData() {
+           fetch('/api/data')
+               .then(response => response.json())
+               .then(data => {
+                   const output = document.getElementById('output');
+                   output.innerHTML = JSON.stringify(data, null, 2);
+               })
+               .catch(error => console.error('Error:', error));
+       }
+ </script>
 <body>
 
 <div class="header">
@@ -56,11 +67,6 @@
   <input type="text" placeholder="検索..." class="search-box">
   <button class="search-button">🔎</button>
 </div>
-<script>
-  
-  </script>
-
-
 </body>
 </html>
 
