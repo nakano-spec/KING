@@ -461,7 +461,7 @@ const { namespace } = require('store');
          if(mondai != ''){
            var pool = poolCluster.of('MASTER');
            var mondai_select = "select mon_ID,mondaibun from mondai_LIST where sentaku = 1;"
-           let mondai_sentaku = "update mondai_LIST set sentaku = '1' where name = ?;"
+           let mondai_sentaku = "insert into question_log(question_id,room_id,question_status,limit_time) VALUES (?,1,.1,?) ;"
            let sql3 = "insert into monhan_LIST values(?,?);"
            let sql4 = "select han_ID from hankeisiki_LIST where han_keisiki = ?;"
            pool.getConnection(function(err,connection){
