@@ -42,23 +42,75 @@
     margin-right: 15px;
   }
 </style>
+
+<div id="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>問題ID</th>
+        <th>問題名</th>
+        <th>問題テキスト</th>
+        <th>画像フラグ</th>
+        <th>タイプID</th>
+      </tr>
+    </thead>
+    <tbody id="output">
+      <!-- ここにデータが表示される -->
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>
 </head>
-<script>
-  function fetchData() {
-           fetch('/api/data')
-               .then(response => response.json())
-               .then(data => {
-                   const output = document.getElementById('output');
-                   output.innerHTML = JSON.stringify(data, null, 2);
-               })
-               .catch(error => console.error('Error:', error));
-       }
- </script>
-<body>
+
+<body onload="fetchData()">
 
 <div class="header">
   <h1>問題管理システム</h1>
 </div>
+
+<div id="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>問題ID</th>
+        <th>問題名</th>
+        <th>問題テキスト</th>
+        <th>画像フラグ</th>
+        <th>タイプID</th>
+      </tr>
+    </thead>
+    <tbody id="output">
+      <!-- ここにデータが表示される -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function fetchData() {
+    fetch('/api/data')
+      .then(response => response.json())
+      .then(data => {
+        const output = document.getElementById('output');
+        output.innerHTML = data.map(row => `
+          <tr>
+            <td>${row.question_ID}</td>
+            <td>${row.question_name}</td>
+            <td>${row.question_text}</td>
+            <td>${row.picture_flag}</td>
+            <td>${row.type_ID}</td>
+          </tr>
+        `).join('');
+      })
+      .catch(error => console.error('Error:', error));
+  }
+</script>
+
+</body>
+</html>
+
+<body>
 
 <div>
   <button class="button">新規作成</button>
