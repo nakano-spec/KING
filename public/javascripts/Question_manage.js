@@ -1,5 +1,5 @@
 const express = require('express');
-const mysql = require('mysql1'); // ここを修正
+const mysql = require('mysql'); // ここを修正
 const app = express();
 const port = 3000;
 
@@ -25,3 +25,5 @@ app.get('/api/data', (res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+module.exports = router;
+
