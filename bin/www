@@ -462,7 +462,8 @@ const { namespace } = require('store');
            var pool = poolCluster.of('MASTER');
            var mondai_select = "select question_log.question_ID,question_text from question_table,question_log where question_log.question_ID=question_table.question_ID AND question_status = 1;" //選択した問題SQL
            let mondai_sentaku = "insert into question_log(question_id,room_id,question_status,limit_time) VALUES (?,1,.1,?) ;"  //出題問題SQL
-           let sql3 = "insert into monhan_LIST values(?,?);"  //英雄の証
+           let sql3 = "insert into judge_table(judge_ID,question_ID) values(?,?);"  
+
            let sql4 = "select han_ID from hankeisiki_LIST where han_keisiki = ?;"  //判定形式SQL
            pool.getConnection(function(err,connection){
              if(err != null){
@@ -479,7 +480,7 @@ const { namespace } = require('store');
                connection.commit((err) =>{
                  if(err){connection.rollback(() =>{throw console.log('error');});}
                })
-               var ID = mondai_result2[0].question_ID;
+               var ID = mondai_result2[0].question_ID;  //ここでエラー
                connection.query(sql4,o,(err,result,fields) =>{
                  if(err){
                    console.log(err);
@@ -498,7 +499,7 @@ const { namespace } = require('store');
            })
        }
      })
- 
+
       socket.on('kiroku',(m1,kaitou1) =>{
    
        let monname = 'select m.mon_ID,s.seikai from mondai_LIST m ,seikai_LIST s where sentaku = 1 and m.mon_ID = s.mon_ID;'
