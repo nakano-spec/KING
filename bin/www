@@ -461,43 +461,46 @@ const { namespace } = require('store');
          if(mondai != ''){
            var pool = poolCluster.of('MASTER');
            var mondai_select = "select question_log.question_ID,question_text from question_table,question_log where question_log.question_ID=question_table.question_ID AND question_status = 1;" //選択した問題SQL
-           let mondai_sentaku = "insert into question_log(question_id,room_id,question_status,limit_time) VALUES (?,1,.1,?) ;"  //出題問題SQL
-           let sql3 = "insert into judge_table(judge_ID,question_ID) values(?,?);"  
-
+           let mondai_sentaku = "insert into question_log(question_id,room_id,question_status,limit_time) VALUES (?,1,1,?) ;"  //出題問題SQL
+           let sql3 = "insert into judge_table(judge_ID,question_ID) values(?,?);" 
            let sql4 = "select han_ID from hankeisiki_LIST where han_keisiki = ?;"  //判定形式SQL
+           let get_id_sql = "select question_ID from question_table where question_name=?;"
            pool.getConnection(function(err,connection){
              if(err != null){
                console.log(err);
                return;
              }
-             connection.query(mondai_sentaku,mondai,(err,mondai_result,fields) =>{
-               console.log(err);
-               connection.query(mondai_select,(err,mondai_result2,fields)=>{
-                 if(err){
-                 var flag = 0;
-                 io.emit('mondai_kekka',flag);
-               }
-               connection.commit((err) =>{
-                 if(err){connection.rollback(() =>{throw console.log('error');});}
-               })
-               var ID = mondai_result2[0].question_ID;  //ここでエラー
-               connection.query(sql4,o,(err,result,fields) =>{
-                 if(err){
-                   console.log(err);
-                 }
-                 var han1 = result[0].han_ID;
-                 connection.query(sql3,[ID,han1],(err,result,fields)=>{
-                   if(err){
-                     console.log(err);
-                   }
-                 })
-               })
-               var flag = 1;
-               io.emit('mondai_kekka',flag);
-               })
-             })
-           })
-       }
+             connection.query(get_id_sql,mondai,(err,question_id,fields)) =>{
+              console.log(err);
+              connection.query(mondai_sentaku,mondai,(err,mondai_result,fields) =>{
+                console.log(err);
+                connection.query(mondai_select,(err,mondai_result2,fields)=>{
+                  if(err){
+                  var flag = 0;
+                  io.emit('mondai_kekka',flag);
+                }
+                connection.commit((err) =>{
+                  if(err){connection.rollback(() =>{throw console.log('error');});}
+                })
+                var ID = mondai_result2[0].question_ID;  //ここでエラー
+                connection.query(sql4,o,(err,result,fields) =>{
+                  if(err){
+                    console.log(err);
+                  }
+                  var han1 = result[0].han_ID;
+                  connection.query(sql3,[ID,han1],(err,result,fields)=>{
+                    if(err){
+                      console.log(err);
+                    }
+                  })
+                })
+                var flag = 1;
+                io.emit('mondai_kekka',flag);
+                })
+              })
+             }
+            })
+          }
      })
 
       socket.on('kiroku',(m1,kaitou1) =>{

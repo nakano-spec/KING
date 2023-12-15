@@ -21,7 +21,7 @@ n.okuru.addEventListener('click',function(e){
 }
  let element= s.selectedIndex;
  var a = s.options[element].innerText;
- socket.emit('mondai_btnclick',a,o);
+ socket.emit('mondai_btnclick',a,o); //mondai
 })
 
 n.kakunin.addEventListener('click',function(e){
