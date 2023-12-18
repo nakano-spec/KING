@@ -14,7 +14,7 @@ const mysql = require("mysql");
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  var by = req.query.byou
+  var by = req.query.byou;
   var app = req.app;
   var poolCluster = app.get("pool");
   var pool = poolCluster.of('MASTER');
