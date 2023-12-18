@@ -18,8 +18,8 @@ router.get('/', function(req, res, next) {
   var app = req.app;
   var poolCluster = app.get("pool");
   var pool = poolCluster.of('MASTER');
-  const sql1 = "select question_ID from question_table where sentaku = '1';"
-  const sql2 = "insert into time_LIST(mon_ID,time) values(?,?);"
+  const sql1 = "select question_ID from question_log where question_status = 1 AND room_ID = 1;"
+  const sql2 = "UPDATE question_log SET limit_time  = ? WHERE question_ID = question_ID AND question_status = 1;"
   pool.getConnection(function(err,connection) {
     if(err != null){
       console.log(err);
@@ -30,7 +30,7 @@ router.get('/', function(req, res, next) {
       if(err){
         console.log(err);
       }
-      var name1 = result[0].mon_ID;
+      var name1 = result[0].question_ID;
       connection.query(sql2,[name1,by],(err,results2,fields) =>{
         if(err){
           console.log(err);

@@ -463,15 +463,15 @@ const { namespace } = require('store');
            var mondai_select = "select question_log.question_ID,question_text from question_table,question_log where question_log.question_ID=question_table.question_ID AND question_status = 1;" //選択した問題SQL
            let mondai_sentaku = "insert into question_log(question_id,room_id,question_status) VALUES (?,1,1) ;"  //出題問題SQL
            let sql3 = "insert into judge_table(judge_ID,question_ID) values(?,?);" 
-           let sql4 = "select han_ID from hankeisiki_LIST where han_keisiki = ?;"  //判定形式SQL
+           let sql4 = "select judge_ID from judge_type where judge_type = ?;"  //判定形式SQL
            let get_id_sql = "select question_ID from question_table where question_name=?;"
-           
+
            pool.getConnection(function(err,connection){
              if(err != null){
                console.log(err);
                return;
              }
-             connection.query(get_id_sql,mondai,(err,question_id,fields) =>{  
+             connection.query(get_id_sql,mondai,(err,question_id,fields) =>{
               console.log(err);
               var q_ID = question_id[0].question_ID;
               connection.query(mondai_sentaku,q_ID,(err,mondai_result,fields) =>{  //ここが実行できてない
