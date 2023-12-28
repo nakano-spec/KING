@@ -2,6 +2,31 @@ var express = require('express');
 const { appendFileSync } = require('fs-extra');
 var router = express.Router();
 
+router.get('/', function(req, res, next) {
+  var name_queli = req.query.name_queli;
+  var app = req.app;
+  const sql = "select qualification_name from genre_table;"  //リスト表示用SQL
+  const poolCluster = app.get('pool');
+  var pool = poolCluster.of('MASTER');
+  pool.getConnection(function(err,connection){
+    if(err != null){
+      console.log(err);
+      return;
+    }
+    pool.query(sql,(err,result2,field)=>{
+      if(err){
+        console.log(err);
+      }
+      var data_quali = {
+        name_quali:name02,
+        web:result2
+      }
+      res.render('mondai2',data_quali);
+    });
+    connection.release();
+  });
+});
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   var name1 = req.query.name;

@@ -140,8 +140,18 @@ opacity: 0.5;
 }
 
 .tui{
-    width:200px;
-    height:80px;
+    position: fixed;
+    top: 150px;
+    width:100px;
+    height:40px;
+    text-align: center;
+}
+
+.tui2{
+    position: fixed;
+    top: 100px;
+    width:100px;
+    height:40px;
     text-align: center;
 }
 

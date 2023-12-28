@@ -21,10 +21,17 @@
         <input type ="submit" name="tuika" class = "tui"value="問題追加">
         <br>
         <br>
-        <input type="submit" name="kakunin"class = "tui" value="問題確認">
+        <input type="submit" name="kakunin"class = "tui2" value="問題確認">
         </div>
         </div>
         <p>問題を選択してください。</p>
+        <!--資格名-->
+        <select name = "quali_name" class = "cp_sl02" required>
+          <% web.forEach((list) => { %>
+            <option><%= list.qualification_name %></option> 
+            <% }) %>
+          </select>
+        <!--問題名-->
         <select  name = "mo1" class="cp_sl02" required>
            <% web.forEach((list) => { %>
             <option><%= list.question_name %></option> 
