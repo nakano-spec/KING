@@ -2,9 +2,14 @@
 <html lang = "ja">
 <head>
     <meta charset ="utf-8">
-    <title>問題選択</title>
+    <title>問題出題</title>
     <link type="text/css" rel="stylesheet" href="/stylesheets/mondai2.css">
 </head>
+<nav>
+  <header>
+    <h1 class = "title">問題出題画面</h1>
+  </header>
+</nav>
 <body>
     <script src="/socket.io/socket.io.js"></script>
     <p><%= name %></p>
@@ -38,7 +43,7 @@
           <input id = "time2" type ="text" name="byou" style="width:40px; height: 20px;">
         <br>
         <br>
-        <input type ="submit" class ="button" name = "okuru" value="問題を送る">
+        <input type ="submit" class ="button" name = "okuru" value="出題する">
         <br>
     </form>
     <div class="sumple">

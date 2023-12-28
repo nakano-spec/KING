@@ -7,12 +7,29 @@
    .child{
     padding-left:300px;
    }
+nav {
+    position: fixed;
+    margin-top: 0;
+    display: flex;
+    width: 1980px;
+    height: 100px;
+    left: 0px;
+    top: -15px;
+    background-color: rgb(240, 138, 5);
+    align-items: center;
+}
+
+.title {
+    margin-right: auto;
+ }
+
 .cp_ipselect {
 position: relative;
 width: 30%;
 margin: 2em auto;
 text-align: center;
 }
+
 .cp_sl02 {
 position: relative;
 font-family: inherit;
@@ -24,17 +41,21 @@ border-radius: 0;
 border: none;
 border-bottom: 1px solid rgba(0,0,0, 0.3);
 }
+
 .cp_sl02:focus {
 outline: none;
 border-bottom: 1px solid rgba(0,0,0, 0);
 }
+
 .cp_ipselect .cp_sl02 {
 appearance: none;
 -webkit-appearance:none
 }
+
 .cp_ipselect select::-ms-expand {
 display: none;
 }
+
 .cp_ipselect:after {
 position: absolute;
 top: 18px;
@@ -48,6 +69,7 @@ border-right: 6px solid transparent;
 border-top: 6px solid rgba(0, 0, 0, 0.3);
 pointer-events: none;
 }
+
 .cp_sl02_selectlabel {
 color: rgba(0,0,0, 0.5);
 font-size: 18px;
@@ -58,17 +80,20 @@ left: 0;
 top: 10px;
 transition: 0.2s ease all;
 }
+
 .cp_sl02:focus ~ .cp_sl02_selectlabel, .cp_sl02:valid ~ .cp_sl02_selectlabel {
 color: #da3c41;
 top: -20px;
 transition: 0.2s ease all;
 font-size: 14px;
 }
+
 .cp_sl02_selectbar {
 position: relative;
 display: block;
 width: 50%;
 }
+
 .cp_sl02_selectbar:before, .cp_sl02_selectbar:after {
 content: '';
 height: 2px;
@@ -78,15 +103,19 @@ position: absolute;
 background: #da3c41;
 transition: 0.2s ease all;
 }
+
 .cp_sl02_selectbar:before {
 left: 30%;
 }
+
 .cp_sl02_selectbar:after {
 right: 30%;
 }
+
 .cp_sl02:focus ~ .cp_sl06_selectbar:before, .cp_sl06:focus ~ .cp_sl06_selectbar:after {
 width: 30%;
 }
+
 .cp_sl02_highlight {
 position: absolute;
 top: 25%;
@@ -94,18 +123,22 @@ left: 0;
 pointer-events: none;
 opacity: 0.5;
 }
+
 .hun{
-width: 10px;
-height: 10px;
+    width: 10px;
+    height: 10px;
 }
+
 .sumple{
-text-align: right;
-font-size: 30px;
+    text-align: right;
+    font-size: 30px;
 }
+
 .button{
-width: 100px;
-height: 50px;
+    width: 100px;
+    height: 50px;
 }
+
 .tui{
     width:200px;
     height:80px;

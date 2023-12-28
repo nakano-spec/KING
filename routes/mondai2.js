@@ -18,26 +18,19 @@ router.get('/', function(req, res, next) {
   var app = req.app;
   var poolCluster = app.get("pool");
   var pool = poolCluster.of('MASTER');
-  const sql1 = "select question_ID from question_log where question_status = 1 AND room_ID = 1;"
-  const sql2 = "UPDATE question_log SET limit_time  = ? WHERE question_ID = question_ID AND question_status = 1;"
+  const set_time = "UPDATE question_log SET limit_time  = ? WHERE question_status = 1 AND room_ID = 1;"
   pool.getConnection(function(err,connection) {
     if(err != null){
       console.log(err);
       return;
     }
 
-    connection.query(sql1,(err,result,fields) =>{
+    connection.query(set_time,[name1,by],(err,result,fields) =>{
       if(err){
         console.log(err);
       }
-      var name1 = result[0].question_ID;
-      connection.query(sql2,[name1,by],(err,results2,fields) =>{
-        if(err){
-          console.log(err);
-        }
-        connection.commit((err) =>{
-          if(err){connection.rollback(() =>{throw console.log('error');});}
-        })
+      connection.commit((err) =>{
+        if(err){connection.rollback(() =>{throw console.log('error');});}
       })
     })
     console.log("追加しました。");
