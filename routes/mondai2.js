@@ -4,11 +4,9 @@ const mysql = require("mysql");
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  var by = req.query.byou
-  var app = req.app;
-  var poolCluster = app.get("pool");
-  var pool = poolCluster.of('MASTER');
-  const sql1 = "select mon_ID from mondai_LIST where sentaku = '1';"
+  var second1 = parseInt(req.query.second);
+  var name1 = req.query.name;
+  /*const sql1 = "select mon_ID from mondai_LIST where sentaku = '1';"
   const sql2 = "insert into time_LIST(mon_ID,time) values(?,?);"
   pool.getConnection(function(err,connection) {
     if(err != null){
@@ -34,6 +32,10 @@ router.get('/', function(req, res, next) {
   })
   var data1={
     byou1:by
+  }*/
+  var data1　={
+    second:second1,
+    name:name1
   }
   res.render('mondai3.ejs',data1);
 });

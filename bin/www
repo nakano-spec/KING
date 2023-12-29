@@ -17,6 +17,7 @@
  var crypto = require('crypto');
  const sha512 = crypto.createHash('sha512');
  const encoding = 'hex';
+ const sanitizeHtml = require('sanitize-html');
  
  
  
@@ -403,79 +404,201 @@
      })
      
      // login
-     socket.on('login_btnclick', (login_name,login_pass1) => {
-           
-           if(login_pass1 != '') {
-             var login_select1 = "select user_name from user_table where user_name = ?;"
-             var login_select2 = "select password from user_table where password = ?;"
-             var login_select3 = "select password from user_table where user_name = ?;"
-             var login_select4 = "select user_type from user_table where user_name = ?;"
-             var login_insert = "insert into loginlog(room_ID,user_ID) values(?,?)"
-             connection.query(login_select1,login_name,(err, login_result1, fields) => {
-               if(err){
-                 console.log(err);
-                 var new_flug = 0;
-                 io.emit('new_flug',new_flug);
-               }
-               connection.query(login_select2,login_pass1,(err, login_result2, fields) => {
-                 if(err){
-                   console.log(err);
-                   var new_flug = 0;
-                   io.emit('new_flug',new_flug);
-                 }
-                 if(login_result1.length >= 0  && login_result2.length >= 0) {
-                   connection.query(login_select3,login_name,(err, login_result3, fields) => {
-                     if(login_result3[0].password == login_pass1) {
-                       if(err){
-                         console.log(err);
-                         var new_flug = 0;
-                         io.emit('new_flug',new_flug);
-                       }
-                       connection.query(login_select4,login_name,(err,login_result4,fields) =>{
-                         if(err){
-                           console.log(err);
-                           var new_flug = 0;
-                           io.to(token).emit('new_flug',new_flug);
-                         }
-   
-                         if(login_result4[0].user_type == 1)
-                         {
-                           var login_flug = 1;
-                           io.to(socket.id).emit('login_flug',login_flug,login_name);
-                         }else if(login_result4[0].user_type == 2)
-                         {
-                           var login_flug = 1;
-                           io.to(socket.id).emit('login_flug1',login_flug,login_name);
-                         }else if(login_result4[0].user_type == 3)
-                         {
-                           var login_flug = 1;
-                           io.to(socket.id).emit('login_flug2',login_flug,login_name);
-                         }
-                       })
-                     }else{
-                       var new_flug=0;
-                       io.to(socket.id).emit('new_flug',new_flug);
-                     }
-                   })
-                 }
-               })
-           })
-         }
-      })
+     socket.on('login_btnclick', (data) => {
+      var username = sanitizeHtml(data.username);
+      var password = sanitizeHtml(data.password);
+      if(data.ExcelJSusername != '') {
+          var login_select = "SELECT * FROM user_table;";
+          connection.query(login_select,(err, users, fields) => {
+              if(err){
+                  console.log(err);
+                  var new_flug = 0;
+                  io.emit('new_flug', new_flug);
+              } else {
+                  var user = users.find(user => user.user_ID === username && user.password === password);
+                  if(user) {
+                      var login_flug = 1;
+                      switch(user.user_type) {
+                          case 1:
+                              async.waterfall([
+                                function(callback) {
+                                    var sql2 = 'SELECT room_ID FROM room_table WHERE user_ID = ?;';
+                                    connection.query(sql2, data.username, function(err, result) {
+                                        if (err) {
+                                            return callback(err);
+                                        }
+                                        callback(null, result[0].room_ID);
+                                    });
+                                },
+                                function(roomID, callback) {
+                                    var sql3 = 'INSERT INTO login_log(room_ID, user_ID) VALUES (?, ?);';
+                                    connection.query(sql3, [roomID, data.username], function(err, result) {
+                                        if (err) {
+                                            return callback(err);
+                                        }
+                                        callback(null, 'done');
+                                    });
+                                }
+                            ], function (err, result) {
+                                if (err) {
+                                    console.log(err);
+                                    var new_flug = 0;
+                                    io.emit('new_flug', new_flug);
+                                } else {
+                                    // すべてのクエリが成功した場合の処理
+                                    io.to(socket.id).emit('login_flug', login_flug, data.username);
+                                }
+                            });
+                              break;
+                          case 2:
+                            async.waterfall([
+                              function(callback){
+                                var sql = 'SELECT user_ID FROM user_table WHERE user_name = ?;';
+                                connection.query(sql,data.selectedOption, function(err, result) {
+                                    if (err) {
+                                        return callback(err);
+                                    }
+                                    callback(null, result[0].user_ID);
+                                });
+                              },
+                              function(userID,callback) {
+                                var sql2 = 'SELECT room_ID FROM room_table WHERE user_ID = ?;';
+                                connection.query(sql2,userID, function(err, result) {
+                                    if (err) {
+                                        return callback(err);
+                                    }
+                                    callback(null, result[0].room_ID);
+                                });
+                              },
+                              function(roomID,callback) {
+                                  var sql3 = 'INSERT INTO login_log(room_ID, user_ID) VALUES (?, ?);';
+                                  connection.query(sql3, [roomID, data.username], function(err, result) {
+                                      if (err) {
+                                          return callback(err);
+                                      }
+                                      callback(null, 'done');
+                                  });
+                              }
+                            ], function (err, result) {
+                              if (err) {
+                                  console.log(err);
+                                  var new_flug = 0;
+                                  io.emit('new_flug', new_flug);
+                              } else {
+                                  // すべてのクエリが成功した場合の処理
+                                  io.to(socket.id).emit('login_flug1', login_flug,user.user_name);
+                              }
+                          });
+                              break;
+                          case 3:
+                              async.waterfall([
+                                function(callback){
+                                  var sql = 'SELECT user_ID FROM user_table WHERE user_name = ?;';
+                                  connection.query(sql,data.selectedOption, function(err, result) {
+                                      if (err) {
+                                          return callback(err);
+                                      }
+                                      callback(null, result[0].user_ID,username);
+                                  });
+                                },
+                                function(user_ID,username,callback){
+                                  var sql = "select room_ID from room_table where user_ID = ?;";
+                                  connection.query(sql,user_ID,(err,result,fields)=>{
+                                    if(err){
+                                      console.log(err);
+                                    }
+                                    callback(null,result[0].room_ID,username);
+                                  })
+                                },
+                                function(roomID,username,callback){
+                                  var sql2 = "insert into login_log(room_ID,user_ID) values(?,?);"
+                                  connection.query(sql2,[roomID,username],(err,result2,fields)=>{
+                                    if(err){
+                                      console.log(err);
+                                    }
+                                    io.to(socket.id).emit('login_flug2', login_flug,username);
+                                  })
+                                },
+                              ])
+                              break;
+                          default:
+                              var new_flug = 0;
+                              io.to(socket.id).emit('new_flug', new_flug);
+                      }
+                  } else {
+                      var new_flug = 0;
+                      io.to(socket.id).emit('new_flug', new_flug);
+                  }
+              }
+          });
+      }
+  });
    
       socket.on('owa2',() =>{
          io.emit('owari');
       })
    
-      socket.on('mondai_btnclick',(mondai,o) => {
-       
-        if(mondai != ''){
+      socket.on('mondai_btnclick',(question_data) => {
+         console.log(question_data.userName);
+        if(question_data != ''){
           var pool = poolCluster.of('MASTER');
-          var mondai_select = "select q.question_ID,r.room_ID from question_table q room_table r  where q.question_name = ?;"
-          let mondai_sentaku = "update mondai_LIST set sentaku = '1' where name = ?;"
-          let sql3 = "insert into monhan_LIST values(?,?);"
-          let sql4 = "select han_ID from hankeisiki_LIST where han_keisiki = ?;"
-          pool.getConnection(function(err,connection){
+          //
+          //データベースサーバーに接続
+          async.waterfall([
+            function(callback) {
+              pool.getConnection(function(err, connection) {
+                  if (err) {
+                      console.log(err);
+                      return callback(err);
+                  }
+                  callback(null, connection);
+              });
+            },
+            function(connection,callback) {
+              var mondai_select = "select q.question_ID,r.room_ID,j.judge_ID from question_table q,room_table r,judge_type j where q.question_name = ? and judge_type = ? and r.user_ID = ?;"
+              connection.query(mondai_select, [question_data.question_name,question_data.Scoring_method,question_data.userName], function(err, selectResult) {
+                  if (err) {
+                      connection.release();
+                      console.log(err);
+                      return callback(err);
+                  }
+                  callback(null, connection,selectResult);
+              });
+            },
+            function(connection,selectResult,callback) {
+              let judge_insert = "insert into judge_table values (?, ?);";
+              let questionID = selectResult[0].question_ID;
+              let roomID = selectResult[0].room_ID;
+              let judgeID = selectResult[0].judge_ID;
+              connection.query(judge_insert, [judgeID,questionID], function(err, result) {
+                  if (err) {
+                      connection.release();
+                      console.log(err);
+                      return callback(err);
+                  }
+                  callback(null, connection, questionID, roomID);
+              });
+            },
+            function(connection, questionID, roomID, callback) {
+              let sql3 = "insert into question_log(question_ID, room_ID, question_status, limit_time) values (?, ?, 1, ?);";
+              connection.query(sql3, [questionID, roomID,question_data.seconds], function(err, result) {
+                  if (err) {
+                      connection.release();
+                      console.log(err);
+                      return callback(err);
+                  }
+                  connection.release();
+                  callback(null, 'success');
+              });
+            }
+          ],function(err,result){
+            if (err) {
+              io.emit('mondai_kekka', 0);
+            } else {
+              io.emit('mondai_kekka', 1);
+            }
+          })
+          /*pool.getConnection(function(err,connection){
             if(err != null){
               console.log(err);
               return;
@@ -506,50 +629,77 @@
                io.emit('mondai_kekka',flag);
                })
              })
-           })
+           })*/
        }
      })
  
       socket.on('kiroku',(m1,kaitou1) =>{
    
-       let monname = 'select m.mon_ID,s.seikai from mondai_LIST m ,seikai_LIST s where sentaku = 1 and m.mon_ID = s.mon_ID;'
-       let seikai = 'select kaitou from mondai_LIST where sentaku = 1;'
-       let tuika = 'insert into kaitou_LIST values(?,?,?,?);'
-       let userIDSELECT = 'select user_ID from users where username = ?;'
-       let update1 = "update kaitou_LIST set user_ID = ? where user_ID = '9999';"
-       var hantei = "✕";
-       connection.query(monname,(err,result,fields)=>{
-         if(err){
-           console.log(err);
-         }
-         var idi = result[0].mon_ID;
-         for(var i = 0;i<result.length;i++){
-           if(kaitou1 == result[i].seikai){
-             hantei = "○";
-           }
-         }
-           var addsqlparams = ['9999',idi,kaitou1,hantei];
-           connection.query(tuika,addsqlparams,(err,result,fields) =>{
-             if(err){
-             console.log(err);
-           }
-           connection.commit((err) =>{
-             if(err){connection.rollback(() =>{throw console.log('error');});}
-           })
-           connection.query(userIDSELECT,m1,(err,result_user,fields)=>{
-             if(err){
-               console.log(err);
-             }
-             var user_I = result_user[0].user_ID
-             connection.query(update1,user_I,(err,result_user2,fields)=>{
-               if(err){
-                 console.log(err);
-               }
-               io.emit('owari');
-             })
-           })
-           })
-         })
+        var pool = poolCluster.of('MASTER');
+        async.waterfall([
+          function(callback){
+            pool.getConnection(function(err, connection) {
+              if (err) {
+                  console.log(err);
+                  return callback(err);
+              }
+              callback(null, connection);
+            });
+          },
+          function(connection,callback){
+            var sql = 'select room_ID from login_log where user_ID = ?;';
+            connection.query(sql,m1,(err,result,fields)=>{
+              if(err){
+                console.log(err);
+              }
+              var room = result[0].room_ID;
+              callback(null,room);
+            })
+          },
+          function(room,callback){
+            var select = 'select question_ID from question_log where room_ID = ?;';
+            connection.query(select,room,(err,result2,field)=>{
+              if(err){
+                console.log(err);
+              }
+              var question = result2[0].question_ID;
+              callback(null,question);
+            })
+          },
+          function(question,callback){
+            var correct = 'select answer from correct_table where question_ID = ?';
+            connection.query(correct,question,(err,result3,fields)=>{
+              if(err){
+                console.log(err);
+              }
+              var correct_data = result3[0].answer;
+              console.log(correct_data);
+              callback(null,correct_data,question);
+            })
+          },
+          function(correct_data,question,callback){
+            var judgement = "✕";
+            if(kaitou1 == correct_data){
+              judgement = "○";
+            }
+            callback(null,question,judgement);
+          },
+          function(question,judgement,callback){
+            var insert = "insert into answer_table(user_ID,question_ID,answer,ans_pics_flag,result) values(?,?,?,0,?);";
+            connection.query(insert,[m1,question,kaitou1,judgement],(err,result4,fields)=>{
+              if(err){
+                console.log(err);
+              }
+              callback(null,"success");
+            })
+          }
+        ],function(err,result5){
+          if(err){
+
+          }else{
+            socket.emit('end');
+          }
+        })
       })
  
       socket.on('all_commit',()=>{
@@ -557,5 +707,35 @@
          if(err){connection.rollback(() =>{throw console.log('error');});}
          connection.release();
        })
+      })
+
+      socket.on('requestQualificationData',function(qualificationName){
+        var sql = 'select g.question_genre,g.question_years,q.question_name from question_table q,genre_table g where g.qualification_name = ? and q.question_ID = g.question_ID;';
+        connection.query(sql,qualificationName,(err,result,fields)=>{
+          if(err){
+            console.log(err);
+          }
+          socket.emit('qualificationData', result);
+        });
+      })
+
+      socket.on('requestquestionname',function(qualificationName){
+        var sql = 'select g.question_genre,q.question_name from question_table q,genre_table g where g.question_years = ? and q.question_ID = g.question_ID;';
+        connection.query(sql,qualificationName,(err,result,fields)=>{
+          if(err){
+            console.log(err);
+          }
+          socket.emit('questionname', result);
+        });
+      })
+
+      socket.on('requestgenre',function(qualificationName){
+        var sql = 'select g.question_genre from question_table q,genre_table g where q.question_name = ? and q.question_ID = g.question_ID;';
+        connection.query(sql,qualificationName,(err,result,fields)=>{
+          if(err){
+            console.log(err);
+          }
+          socket.emit('questiongenre', result);
+        });
       })
    });

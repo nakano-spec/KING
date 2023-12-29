@@ -3,7 +3,12 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.render('hyouji2.ejs');
+  var name1 = req.query.name;
+  console.log(name1);
+  var data ={
+    name:name1
+  }
+  res.render('hyouji2.ejs',data);
 });
 
 module.exports = router;

@@ -7,28 +7,73 @@ const async = require('async');
 
 router.get("/", (req, res)=>{
     var app = req.app;
+    var name1 = req.query.name;
     var poolCluster = app.get('pool');
     var pool = poolCluster.of('MASTER');
-    const sql3 = "select m.mon_ID,m.mondaibun,m.picturename,t.time from mondai_LIST m,time_LIST t where sentaku = '1' and m.mon_ID = t.mon_ID";
-    const sql4 = "select sentaku from mondai_LIST;"
+    const sql = "select room_ID from login_log where user_ID = ?;";
     pool.getConnection(function(err,connection){
-        connection.query(sql4,(err,result2,fields)=>{
-            if(err){
-                console.log(err);
-            }
+        //connection.query(sql4,(err,result2,fields)=>{
             async.waterfall([
                 function(callback){
-                    for(var i = 0;i < result2.length;i++){
-                        if(result2[i].sentaku == 1){
-                         connection.query(sql3,(err,result,fields)=>{
-                         if(err){
-                             console.log(err);
-                         }
-                         res.render('index',{web:result});
-                        })
-                        }
+                   connection.query(sql,name1,(err,result,field)=>{
+                     if(err){
+                        console.log(err);
                      }
+                     callback(null,result[0].room_ID);
+                   }) 
                 },
+                function(roomID,callback){ 
+                    var sql2 = "select question_ID from question_log where room_ID = ?;";
+                    connection.query(sql2,roomID,(err,result2,field)=>{
+                        if(err){
+                            console.log(err);
+                        }
+                        callback(null,roomID,result2[0].question_ID);
+                    })
+                },
+                function(roomID,questionID,callback){
+                    var sql3 = "select pics_name from pics_table where question_ID = ?;";
+                    connection.query(sql3,questionID,(err,result3,field)=>{
+                        if(err){
+                            console.log(err);
+                        }
+                        if(result3.length == 0){
+                            var result = 0;
+                            callback(null,roomID,questionID,result);
+                        }else{
+                            var result = result3[0].pics_name;
+                            callback(null,roomID,questionID,result);
+                        }
+                    })
+                },
+                function(roomID,questionID,result,callback){
+                    if(result == 0){
+                        var sql4 = "select q.question_text,l.limit_time from question_table q,question_log l where q.question_ID = l.question_ID and l.question_ID = ? and l.question_ID = ?;";
+                        connection.query(sql4,[questionID,roomID],(err,result4,field)=>{
+                            if(err){
+                                console.log(err);
+                            }
+                            var data ={
+                                text:result4[0].question_text,
+                                time:result4[0].limit_time
+                            }
+                            res.render('index',data);
+                        })
+                    }else{
+                        var sql4 = "select q.question_text,l.limit_time from question_table q,question_log l where q.question_ID = l.question_ID and l.question_ID = ? and l.question_ID = ?;";
+                        connection.query(sql4,[questionID,roomID],(err,result4,field)=>{
+                            if(err){
+                                console.log(err);
+                            }
+                            var data ={
+                                text:result4[0].question_text,
+                                time:result4[0].limit_time,
+                                picture:result
+                            }
+                            res.render('index',data);
+                        })
+                    }
+                }
             ],
             function(err){
                 res.render('hyouji2');
@@ -44,8 +89,8 @@ router.get("/", (req, res)=>{
                }
             }
             res.render('hyouji2');*/
-        })
-        connection.release();
+        //})
+        //connection.release();
     })
     
     /*connection.query(sql, (err, result, fields)=>{

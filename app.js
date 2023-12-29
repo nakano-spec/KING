@@ -31,6 +31,8 @@ var kanryouRouter = require('./routes/kanryou');
 var missRouter = require('./routes/miss');
 var uploadRouter = require('./routes/upload.js')
 var tuika2Router = require('./routes/tuika2');
+var Answer_backRouter = require('./routes/Answer_back');
+
 
 const router = require('./routes/index');
 //読み込んだexpressをapp変数に格納
@@ -43,6 +45,7 @@ const db_conf ={
   password :'20010426',
   database :'mydb2',
 }
+
 const pool = mysql.createPoolCluster();
 pool.add('MASTER',db_conf);
 
@@ -83,6 +86,7 @@ app.use('/kanryou',kanryouRouter);
 app.use('/miss',missRouter);
 app.use('/upload',uploadRouter);
 app.use('/tuika2',tuika2Router);
+app.use('/Answer_back',Answer_backRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
