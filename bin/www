@@ -102,6 +102,7 @@ const mysql = require('mysql2');
 const store = require('store');
 const { connect } = require('http2');
 const { namespace } = require('store');
+const { error } = require('console');
 
 io.on('connection', (socket) => {//ページが繋がったとき
   const mysql_setting = {
@@ -535,10 +536,15 @@ io.on('connection', (socket) => {//ページが繋がったとき
               }
               io.emit('owari');
             })
-          })
+          })  
           })
         })
      })
+
+     socket.on('Question_manage',(manage)=>{
+      let Question = 'select * from Question_manage;'
+     connection.query(Question(question_id,question_name,question_text,picture_flag,type_id))}
+     
 
      socket.on('all_commit',()=>{
       connection.commit((err) =>{
@@ -546,4 +552,5 @@ io.on('connection', (socket) => {//ページが繋がったとき
         connection.release();
       })
      })
-  });
+  
+ 

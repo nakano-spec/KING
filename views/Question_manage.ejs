@@ -70,26 +70,6 @@
     </tbody>
   </table>
 </div>
-
-<script>
-  function fetchData() {
-    fetch('/api/data')
-      .then(response => response.json())
-      .then(data => {
-        const output = document.getElementById('output');
-        output.innerHTML = data.map(row => `
-          <tr>
-            <td>${row.question_ID}</td>
-            <td>${row.question_name}</td>
-            <td>${row.question_text}</td>
-            <td>${row.picture_flag}</td>
-            <td>${row.type_ID}</td>
-          </tr>
-        `).join('');
-      })
-      .catch(error => console.error('Error:', error));
-  }
-</script>
-
+<script src="javascripts/Question_manage.ejs"></script>
 </body>
 </html>
