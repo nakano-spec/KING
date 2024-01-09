@@ -544,7 +544,7 @@ io.on('connection', (socket) => {//ページが繋がったとき
      socket.on('Question_manage',(manage)=>{
       let Question = 'select * from Question_manage;'
      connection.query(Question(question_id,question_name,question_text,picture_flag,type_id))}
-     
+     )
 
      socket.on('all_commit',()=>{
       connection.commit((err) =>{
