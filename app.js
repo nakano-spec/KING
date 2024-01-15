@@ -29,9 +29,9 @@ var tuikaRouter = require('./routes/tuika');
 var failRouter = require('./routes/fail');
 var kanryouRouter = require('./routes/kanryou');
 var missRouter = require('./routes/miss');
-var uploadRouter = require('./routes/upload.js')
+var uploadRouter = require('./routes/upload.js');
 var tuika2Router = require('./routes/tuika2');
-var Question_manageRouter = require('./routes/Question_manage');
+var Question_manageRouter = require('./routes/Question_manage.js');
 
 const router = require('./routes/index');
 //読み込んだexpressをapp変数に格納
