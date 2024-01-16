@@ -556,7 +556,7 @@ io.on('connection', (socket) => {//ページが繋がったとき
               })
             }
             var flag = 1;
-            io.emit('mondai_kekka',flag);
+            io.emit('Question_manage',flag);
             })
   
       //let Question = 'select * from Question_manage;'
