@@ -2,6 +2,7 @@ var express = require('express');
 const { appendFileSync } = require('fs-extra');
 var router = express.Router();
 
+/*
 router.get('/', function(req, res, next) {
   var name_queli = req.query.name_queli;
   var app = req.app;
@@ -19,13 +20,14 @@ router.get('/', function(req, res, next) {
       }
       var data_quali = {
         name_quali:name02,
-        web:result2
+        web_quali:result2
       }
       res.render('mondai2',data_quali);
     });
     connection.release();
   });
 });
+*/
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

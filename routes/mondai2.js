@@ -25,7 +25,7 @@ router.get('/', function(req, res, next) {
       return;
     }
 
-    connection.query(set_time,[name1,by],(err,result,fields) =>{
+    connection.query(set_time,[by],(err,result,fields) =>{
       if(err){
         console.log(err);
       }
