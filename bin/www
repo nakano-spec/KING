@@ -542,9 +542,23 @@ io.on('connection', (socket) => {//ページが繋がったとき
      })
 
     // socket.on('Question_manage',(manage)=>{
-      function getValueFromScript2() {
-        return "これはscript2.jsからのデータです。";
-      }
+    
+    socket.on('Question_manage',(Question,o) => {
+      
+      if(Question != ''){
+        var pool = poolCluster.of('MASTER');
+        var mondai_select = "'select * from Question_manage;'"
+        pool.getConnection(function(err,connection){
+          if(err != null){
+            console.log(err);
+            return;
+          }
+              })
+            }
+            var flag = 1;
+            io.emit('mondai_kekka',flag);
+            })
+  
       //let Question = 'select * from Question_manage;'
      //connection.query(Question(question_id,question_name,question_text,picture_flag,type_id))}
      
