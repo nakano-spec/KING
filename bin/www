@@ -542,21 +542,12 @@ io.on('connection', (socket) => {//ページが繋がったとき
      })
 
     // socket.on('Question_manage',(manage)=>{
-    
-    socket.on('Question_manage',(Question,o) => {
       
-      if(Question != ''){
-        var pool = poolCluster.of('MASTER');
-        var mondai_select = "'select * from Question_manage;'"
-        pool.getConnection(function(err,connection){
-          if(err != null){
-            console.log(err);
-            return;
-          }
-              })
-            }
-            var flag = 1;
-            io.emit('Question_manage',flag);
+    socket.on('Question',(sql) => {
+      app.git
+      let sql = 'select * from Question_manage;'
+      connection.query(sql(question_id,question_name,question_text,picture_flag,type_id))
+    
             })
   
       //let Question = 'select * from Question_manage;'

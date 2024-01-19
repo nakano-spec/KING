@@ -1,6 +1,5 @@
 const express = require("express");
 var router = express.Router();
-const mysql = require("mysql");
 /*const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -10,17 +9,17 @@ const mysql = require("mysql");
 
 //connection.connect();
 
-router.get("/", (req, res)=>{
-    const sql = 'select * from Question_manage;'
-    var app = req.app;
-    var poolCluster = app.get("pool");
-    var pool = poolCluster.of('MASTER');
-            connection.release();
-    })
+sql.addEventListener('load',sampleEvent, false);
+function sampleEvent() {
+  
+  //ここに処理を記述する
+      connection.query(sql, [1, 2], function(err, rows) {
+        console.log(rows);
+      });
+  
+  module.exports = router;
+}
 
-
-
-module.exports = router;
 
 
 

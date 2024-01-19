@@ -1,25 +1,19 @@
-/*function loadScript(url, callback) {
-  var script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = url;
 
-  script.onload = function() {
-      callback();
-  };
+var socket = io();
+const express = require("express");
+/*loadでページが読み込まれたときに */
+socket.addEventListener('load',sampleEvent, false);
+function sampleEvent() {
+  let sql = 'select * from Question_manage;'
+  connection.query(sql(question_id,question_name,question_text,picture_flag,type_id))
+  if(question_id){
+    console.log(question_id);
+  }
+  //ここに処理を記述する
+  
+  module.exports = router;
+}
 
-  document.head.appendChild(script);
-}*/
 
-loadScript('bin/www', function() {
-  document.getElementById('content').innerText = getValueFromScript2();
-});
-            f.button3.addEventListener('click',function(e){
-                e.preventDefault();
-                socket.emit('owa2');
-            })
 
-            f.kekka.addEventListener('click',function(e){
-                e.preventDefault();
-                window.location.href = '/Question_manage';
-            })
 
