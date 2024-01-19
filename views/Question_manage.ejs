@@ -9,7 +9,7 @@
     font-family: Arial, sans-serif;
   }
   .header {
-    background-color: #fb9221;
+    background-color: #FFA07A;
     padding: 10px;
     text-align: center;
   }
@@ -36,42 +36,39 @@
     padding: 8px;
   }
   th {
-    background-color: #f4973b;
+    background-color: #FFDAB9;
   }
   .radio-button {
     margin-right: 15px;
   }
 </style>
-<script src="/javascripts/Question_manage.js"></script>
 </head>
-<body onload="fetchData()">
+<body>
 
 <div class="header">
   <h1>問題管理システム</h1>
 </div>
 
 <div>
+  <button class="button">新規作成</button>
+  <button class="button">選択した問題の編集</button>
+  <button class="button">選択した問題の削除</button>
   <input type="text" placeholder="検索..." class="search-box">
   <button class="search-button">🔎</button>
 </div>
 
-<div id="table-container">
-  <table>
-    <thead>
-      <tr>
-        <th>問題ID</th>
-        <th>問題名</th>
-        <th>問題テキスト</th>
-        <th>画像フラグ</th>
-        <th>タイプID</th>
-      </tr>
-    </thead>
-    <tbody id="output">
-      <!-- ここにデータが表示される -->
-    </tbody>
-  </table>
-</div>
-<script Src="routes/Question_manage.js"
-<input onclick="Question();"/>
+<table>
+  <tr>
+    <th>問題名</th>
+    <th>問題文</th>
+  </tr>
+  <tr>
+    <td><input type="radio" class="radio-button">SQL</td>
+    <td>SQLとは何の略称でしょうか？</td>
+  </tr>
+  <!-- その他の行は、データに応じて追加 -->
+</table>
+
 </body>
 </html>
+
