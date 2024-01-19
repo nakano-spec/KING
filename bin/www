@@ -543,12 +543,8 @@ io.on('connection', (socket) => {//ページが繋がったとき
 
     // socket.on('Question_manage',(manage)=>{
     
-    socket.on('Question',(Questionsql) => {
+   // socket.on('Question',() => {
       
-      let Questionsql = 'select * from Question_manage;'
-      connection.query(Questionsql(question_id,question_name,question_text,picture_flag,type_id))
-    
-            })
   
       //let Question = 'select * from Question_manage;'
      //connection.query(Question(question_id,question_name,question_text,picture_flag,type_id))}
