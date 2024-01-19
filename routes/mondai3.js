@@ -12,8 +12,8 @@ const mysql = require("mysql");
 
 router.get("/", (req, res)=>{
     const sql = "select m.question_ID,u.user_name,k.answer,k.result from answer_table k,user_table u,question_table m where k.user_ID = u.user_ID and k.question_ID = m.question_ID;"
-    const sql2 = "select s.answer from answer_table k,correct_table s where k.question_ID = s.question_ID"
-    const sql3 = "select k.type_name,m.question_ID from answer_type k, question_table m question_log l where l.question_status = '1' and m.type_ID = k.type_ID;" //ログからも取る
+    const sql2 = "select s.answer from answer_table k,correct_table s where k.question_ID = s.question_ID;"
+    const sql3 = "select k.type_name,m.question_ID from answer_type k, question_table m, question_log where question_status = 1 and m.type_ID = k.type_ID;" //ログからも取る
     const sql4 = "select h.judge_type from judge_type h,question_log m where h.judge_ID = m.judge_ID and m.question_ID = ?;"
     var app = req.app;
     var poolCluster = app.get("pool");
