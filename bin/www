@@ -542,9 +542,10 @@ io.on('connection', (socket) => {//ページが繋がったとき
      })
 
     // socket.on('Question_manage',(manage)=>{
-      
+    
     socket.on('Question',(sql) => {
       app.git
+      let sql = 'select * from Question_manage;'
       connection.query(sql(question_id,question_name,question_text,picture_flag,type_id))
     
             })
