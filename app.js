@@ -31,7 +31,7 @@ var kanryouRouter = require('./routes/kanryou');
 var missRouter = require('./routes/miss');
 var uploadRouter = require('./routes/upload.js');
 var tuika2Router = require('./routes/tuika2');
-var Question_manageRouter = require('./views/Question_manage.ejs');
+var Question_manageRouter = require('./routes/Question_manage.js');
 
 const router = require('./routes/index');
 //読み込んだexpressをapp変数に格納
