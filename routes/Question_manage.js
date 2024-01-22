@@ -1,5 +1,5 @@
-const string = "革命はテレビでは放送されない。";
-console.log(string);
+let str = "革命はテレビでは放送されない";
+console.log(str);
 
 
 
