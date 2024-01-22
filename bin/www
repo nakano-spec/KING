@@ -465,7 +465,7 @@ const { namespace } = require('store');
            let sql3 = "insert into judge_table(judge_ID,question_ID) values(?,?);" 
            let sql4 = "select judge_ID from judge_type where judge_type = ?;"  //判定形式SQL
            let get_id_sql = "select question_ID from question_table where question_name=?;"
-           let get_status = "select count(*) from question_log where room_id = 1;"
+           let get_status = "select count(*) as cnt from question_log where room_id = 1;"
            let question_reset = "update question_log set question_status = 0 WHERE room_id = 1;"
 
            pool.getConnection(function(err,connection){
@@ -478,12 +478,13 @@ const { namespace } = require('store');
                 console.log(err);
                 return;
               }
-              if(status_count =! 0){
+              if(status_count[0].cnt =! 0){
+                console.log(status_count);
                 connection.query(question_reset,(err,fields) =>{
                   if(err =! null){
                     console.log(err);
                     return;
-                  }
+                  } 
                   connection.commit((err) =>{
                     if(err){connection.rollback(() =>{throw console.log('error');});}
                   })
@@ -494,7 +495,7 @@ const { namespace } = require('store');
              connection.query(get_id_sql,mondai,(err,question_id,fields) =>{
               console.log(err);
               var q_ID = question_id[0].question_ID;
-              connection.query(mondai_sentaku,q_ID,(err,mondai_result,fields) =>{  
+              connection.query(mondai_sentaku,q_ID,(err,mondai_result,fields) =>{
                 console.log(err);
                 connection.query(mondai_select,(err,mondai_result2,fields)=>{
                   if(err){
