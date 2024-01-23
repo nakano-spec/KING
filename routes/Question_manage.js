@@ -5,7 +5,7 @@ let str = "革命はテレビでは放送されない";
 console.log(str);
 
 router.get('/', function(req, res, next) {
-    res.render('Question_manage.ejs');
+    res.render('Question_manage');
   });
 
 module.exports = router;
