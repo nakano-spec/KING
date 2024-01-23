@@ -1,16 +1,8 @@
-var express = require('express');
-var router = express.Router();
-//const mysql = require("mysql");
+const express = require('express');
+const router = express.Router();
 
-let str = "革命はテレビでは放送されない";
-console.log(str);
-res.render('kakunin.ejs',{data:str});
+router.get('/', (req, res) => {
+    res.render('Question_manage', { text: 'Hello World!' });
+});
 
 module.exports = router;
-
-
-
-
-
-
-
