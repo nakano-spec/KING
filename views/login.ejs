@@ -88,7 +88,7 @@
       //ログインしたユーザーが先生だった場合の処理
       socket.on('login_flug',function(flug,name){
         if(flug == 1) {
-          window.location.href = 'mondai?name=' + encodeURIComponent(name);
+          window.location.href = 'main?name=' + encodeURIComponent(name);
         }else if(flug == 0){
           console.log('パスワードが不一致、または登録されていないuserデータです。');
         }

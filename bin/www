@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
- var app = require('../app');
+ var { app,sessionMiddleware } = require('../app');
  var debug = require('debug')('sotuken:server');
  var http = require('http');
  var express = require('express');
@@ -106,8 +106,15 @@
  const store = require('store');
  const { connect } = require('http2');
  const { namespace } = require('store');
+
+  // Socket.ioにセッションミドルウェアを適用する
+  io.use((socket, next) => {
+      sessionMiddleware(socket.request, {}, next);
+  });
+
  
  io.on('connection', (socket) => {//ページが繋がったとき
+   console.log(socket.request.session);
    const mysql_setting = {
      host: 'localhost',
      user: 'root',
@@ -397,10 +404,10 @@
    
      socket.on('hyou',(c) =>{
          io.emit('hyouji',c);
-       })
+      })
    
-     socket.on('kekkahyouji',()=>{
-         io.emit('kekkahyouji2');
+     socket.on('kekkahyouji',(cell)=>{
+         io.emit('kekkahyouji2',cell);
      })
      
      // login
@@ -438,6 +445,14 @@
                                         }
                                         callback(null, 'done');
                                     });
+                                },
+                                function(result,callback){
+                                  socket.request.session.user = {username:username};
+                                  socket.request.session.page = {page:'main.ejs'};
+                                  socket.request.session.Before_page = {Before_page:'login.ejs'};
+                                  socket.request.session.save();
+                                  console.log(socket.request.session);
+                                  callback(null,'done');
                                 }
                             ], function (err, result) {
                                 if (err) {
@@ -534,6 +549,45 @@
       }
   });
    
+        socket.on('account_delete',(user_ID)=>{
+          var sql = "delete from user_table where user_ID = ?;";
+          connection.query(sql,user_ID,(err,result,field)=>{
+            if(err){
+              console.log(err);
+            }
+            io.emit('delete_complete');
+          })
+        })
+
+        socket.on('search_accounts', function(searchTerm) {
+          const sql = 'SELECT user_ID, user_name, password,log_time FROM user_table WHERE user_ID LIKE ? OR user_name LIKE ? OR password LIKE ?';
+          connection.query(sql, [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`], function(err, results) {
+              if (err) {
+                  // エラー処理
+                  console.log(err);
+                  socket.emit('search_results', []);
+              } else {
+                  // 検索結果をクライアントに送信
+                  socket.emit('search_results', results);
+              }
+          });
+      });
+
+      socket.on('add_account', function(formData) {
+        if(formData.user_type == "学生"){
+          var user_typeID = 2
+        }else{
+          var user_typeID = 2
+        }
+        var sql = 'insert into user_table(user_ID,user_name,password,user_type) values(?,?,?,?)'
+        connection.query(sql,[formData.user_ID,formData.user_name,formData.pass_word,user_typeID],(err,result,field)=>{
+          if(err){
+            console.log(err);
+            socket.emit('account_added');
+          }
+        })
+      });
+    
       socket.on('owa2',() =>{
          io.emit('owari');
       })

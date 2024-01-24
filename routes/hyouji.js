@@ -19,6 +19,7 @@ router.get("/", (req, res)=>{
                      if(err){
                         console.log(err);
                      }
+                     console.log(result[0].room_ID);
                      callback(null,result[0].room_ID);
                    }) 
                 },
@@ -28,6 +29,7 @@ router.get("/", (req, res)=>{
                         if(err){
                             console.log(err);
                         }
+                        console.log(result2[0].question_ID);
                         callback(null,roomID,result2[0].question_ID);
                     })
                 },
@@ -48,20 +50,21 @@ router.get("/", (req, res)=>{
                 },
                 function(roomID,questionID,result,callback){
                     if(result == 0){
-                        var sql4 = "select q.question_text,l.limit_time from question_table q,question_log l where q.question_ID = l.question_ID and l.question_ID = ? and l.question_ID = ?;";
+                        var sql4 = "select q.question_text,l.limit_time from question_table q,question_log l where q.question_ID = l.question_ID and l.question_ID = ? and l.room_ID = ?;";
                         connection.query(sql4,[questionID,roomID],(err,result4,field)=>{
                             if(err){
                                 console.log(err);
                             }
                             var data ={
                                 text:result4[0].question_text,
-                                time:result4[0].limit_time
+                                time:result4[0].limit_time,
+                                picture:result
                             }
                             res.render('index',data);
                         })
                     }else{
-                        var sql4 = "select q.question_text,l.limit_time from question_table q,question_log l where q.question_ID = l.question_ID and l.question_ID = ? and l.question_ID = ?;";
-                        connection.query(sql4,[questionID,roomID],(err,result4,field)=>{
+                        var sql4 = "select q.question_text,l.limit_time from question_table q,question_log l where q.question_ID = l.question_ID and l.room_ID = ? and l.question_ID = ?;";
+                        connection.query(sql4,[roomID,questionID],(err,result4,field)=>{
                             if(err){
                                 console.log(err);
                             }

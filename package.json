@@ -17,6 +17,8 @@
     "ejs": "^3.1.9",
     "exceljs": "^4.3.0",
     "express": "~4.18.2",
+    "express-mysql-session": "^3.0.0",
+    "express-session": "^1.17.3",
     "fs-extra": "^11.1.1",
     "helmet": "^7.0.0",
     "http-errors": "~2.0.0",

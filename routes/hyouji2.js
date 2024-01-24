@@ -11,7 +11,7 @@ const mysql = require("mysql");
 /* GET users listing. */
 router.get('/', function(req, res, next) {
    var app = req.app;
-   var s = 'select u.username,k.kai,k.han from kaitou_LIST k,users u where k.user_ID = u.user_ID;'
+   var sql = 'select u.username,k.kai,k.result from answer_table k,users u where k.user_ID = u.user_ID;'
    var poolCluster = app.get("pool");
    var pool = poolCluster.of('MASTER');
    pool.getConnection(function(err,connection){
