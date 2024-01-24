@@ -3,7 +3,7 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
     var app = req.app;
-    var Questionsql = 'SELECT * FROM Question_manage;';
+    var Questionsql = 'SELECT * FROM Question_table;';
     var poolCluster = app.get("pool");
     var pool = poolCluster.of('MASTER');
 
