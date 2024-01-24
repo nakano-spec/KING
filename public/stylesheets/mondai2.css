@@ -8,7 +8,7 @@
     padding-left:300px;
    }
 nav {
-    position: fixed;
+    position: absolute;
     margin-top: 0;
     display: flex;
     width: 1980px;
@@ -17,6 +17,7 @@ nav {
     top: -15px;
     background-color: rgb(240, 138, 5);
     align-items: center;
+    z-index: 100;
 }
 
 .title {
@@ -140,7 +141,7 @@ opacity: 0.5;
 }
 
 .tui{
-    position: fixed;
+    position: absolute;
     top: 150px;
     width:100px;
     height:40px;
@@ -148,7 +149,7 @@ opacity: 0.5;
 }
 
 .tui2{
-    position: fixed;
+    position: absolute;
     top: 100px;
     width:100px;
     height:40px;
@@ -158,4 +159,102 @@ opacity: 0.5;
 body{
     background-color: #fffca9;
     background-size: cover;
+  }
+
+/*メニュー表示用*/
+.ham_menu{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0,0,0,0.9);
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 初期：非表示 */
+    visibility: hidden;
+    opacity: 0;
+    /* ふわっと表示 */
+    transition: 0.5s ease-in-out;
+  }
+
+/*ハンバーガーメニュー用*/
+#hambtn{
+    z-index: 10000;
+    position: absolute;
+    top: 30px;
+    right: 15px;
+    padding: 0;
+    outline: none;
+    border: none;
+    background-color: #333333;
+    width: 30px;
+    height: 2px;
+    cursor: pointer;
+  }
+
+  /* 高さ1pxの線を上下に表示 */
+#hambtn::after{
+  position: relative;
+  content : '';
+  display: block;
+  height: 2px;
+  background-color: #333333;
+  transform: translateY(10px);
+  transition: 0.3s ease-in-out;
+  top: -5px;
+}
+
+#hambtn::before{
+    position: relative;
+    content : '';
+    display: block;
+    height: 2px;
+    background-color: #333333;
+    transform: translateY(10px);
+    transition: 0.3s ease-in-out;
+    top: -16px;
+}
+
+/*閉じる動作*/
+.open #hambtn{
+    z-index: 100;
+    background: none;
+  }
+
+.open #hambtn::before{
+    transform: rotate(-45deg);
+    top: 0px;
+    box-shadow: none;
+  }
+
+.open #hambtn::after{
+    transform: rotate(45deg);
+    top: -1.5px;
+    box-shadow: none;
+  }
+
+  @media(min-width: 768px){
+    /* ヘッダーは横並び */
+    header{
+      display: flex;
+      align-items: center;
+    }
+    /* メニューを右に寄せる */
+    .ham{
+      /* 右寄せ */
+      margin-left: auto;
+    }
+    .ham ul{
+      display: flex;
+      list-style:none
+    }
+    .ham ul li:not(:first-child){
+      margin-left:20px;
+    }
+    .nav ul li a { 
+      color: #000000;
+    }
   }

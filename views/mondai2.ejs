@@ -4,12 +4,25 @@
     <meta charset ="utf-8">
     <title>問題出題</title>
     <link type="text/css" rel="stylesheet" href="/stylesheets/mondai2.css">
-</head>
-<nav>
-  <header>
+</head>  
+<header>
+  <nav>
     <h1 class = "title">問題出題画面</h1>
-  </header>
+  </nav>
+</header>
+
+<!--ハンバーガー作成-->
+<nav class="ham_menu">
+  <ul class="ham">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Menu</a></li>
+    <li><a href="#">News</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <button type="button" id="hambtn"></button>
 </nav>
+<!--ハンバーガー作成-->
+
 <body>
     <script src="/socket.io/socket.io.js"></script>
     <p><%= name %></p>
@@ -25,12 +38,12 @@
         </div>
         </div>
         <p>問題を選択してください。</p>
-        <!--資格名-->
+        <!--資格名
         <select name = "quali_name" class = "cp_sl02" required>
           <% web.forEach((list) => { %>
             <option><%= list.qualification_name %></option> 
             <% }) %>
-          </select>
+          </select>-->
         <!--問題名-->
         <select  name = "mo1" class="cp_sl02" required>
            <% web.forEach((list) => { %>
