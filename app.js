@@ -42,7 +42,7 @@ const db_conf ={
   host :'localhost',
   user :'root',
   password :'20021225',
-  database :'mydb',
+  database :'mydb2',
 }
 const pool = mysql.createPoolCluster();
 pool.add('MASTER',db_conf);
