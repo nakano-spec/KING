@@ -31,7 +31,7 @@ var kanryouRouter = require('./routes/kanryou');
 var missRouter = require('./routes/miss');
 var uploadRouter = require('./routes/upload.js');
 var tuika2Router = require('./routes/tuika2');
-var QuestionmanageRouter = require('./routes/Question_manage');
+var Question_manageRouter = require('./routes/Question_manage.js');
 
 const router = require('./routes/index');
 //読み込んだexpressをapp変数に格納
@@ -84,7 +84,8 @@ app.use('/kanryou',kanryouRouter);
 app.use('/miss',missRouter);
 app.use('/upload',uploadRouter);
 app.use('/tuika2',tuika2Router);
-app.use('/Question_manage',QuestionmanageRouter);
+app.use('/Question_manage',Question_manageRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
