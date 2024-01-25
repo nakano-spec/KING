@@ -25,20 +25,9 @@
 <table>
     <tr>
         <th>問題名</th>
-        <th>問題文</th>
-    </tr>
-    <% if (questions.length > 0) { %>
-        <% questions.forEach(function(question) { %>
-            <tr>
+        <th>問題文</th>   
                 <td><%= question.question_name %></td>
                 <td><%= question.question_text %></td>
-            </tr>
-        <% }); %>
-    <% } else { %>
-        <tr>
-            <td colspan="2">質問が見つかりません。</td>
-        </tr>
-    <% } %>
 </table>
 
 </body>
