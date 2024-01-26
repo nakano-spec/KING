@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
         }
 
         // 最初のクエリを実行
-        connection.query(Questionsql, (err, results1) => {
+        connection.query(Questionsql, (err, results1, fields) => {
             if (err) {
                 connection.release();
                 console.error("Query error:", err);
@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
             }
 
             // ２つ目のクエリを実行
-            connection.query(Questionsql2, (err, results2) => {
+            connection.query(Questionsql2, (err, results2, fields) => {
                 connection.release(); // コネクションをリリース
 
                 if (err) {
