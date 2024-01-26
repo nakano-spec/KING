@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
 
     pool.getConnection(function(err, connection) {
         if (err) {
-            console.error("DB connection error:", err);
+            console.error("DB connection error:", err1);
             res.status(500).send("Database connection error");
             return;
         }
@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
             connection.release(); // コネクションをリリース
 
             if (err) {
-                console.error("Query error:", err);
+                console.error("Query error:", err2);
                 res.status(500).send("Database query error");
                 return;
             }
