@@ -25,9 +25,14 @@
 <table>
     <tr>
         <th>問題名</th>
-        <th>問題文</th>   
-                <td><%= questionNames %></td>
-                <td><%= questionTexts %></td>
+        <th>問題文</th>
+    </tr>
+    <% questions.forEach(function(question) { %>
+        <tr>
+            <td><%= question.question_name %></td>
+            <td><%= question.question_text %></td>
+        </tr>
+    <% }); %>
 </table>
 
 </body>
