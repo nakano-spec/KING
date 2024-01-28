@@ -3,10 +3,9 @@ var router = express.Router();
 
 router.get('/', function(req, res, next) {
   var name1 = req.query.name;
-  var pool = req.app.get('pool');
+  var pool = req.app.get('pool2'); // pool2 を使用
 
   const sql = "SELECT name FROM mondai_LIST;";
-  console.log(sql);
   pool.query(sql, (err, result1) => {
     if (err) {
       console.error(err);
