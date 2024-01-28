@@ -6,7 +6,7 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   var name1 = req.query.name;
   var app = req.app;
-  const sql = "select name from mondai_LIST;"
+  const sql = "select q.question_name,g.qualification_name,g.question_genre,g.question_years from question_table q,genre_table g;"
   const poolCluster = app.get('pool');
   var pool = poolCluster.of('MASTER');
   pool.getConnection(function(err,connection){

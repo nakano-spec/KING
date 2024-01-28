@@ -7,6 +7,8 @@ var logger = require('morgan');
 var multer = require('multer');
 var cors = require('cors');
 var mysql = require('mysql2');
+var session = require('express-session');
+var MySQLStore = require('express-mysql-session')(session);
 
 //パス情報を変数に格納している。
 var indexRouter = require('./routes/index');
@@ -31,6 +33,13 @@ var kanryouRouter = require('./routes/kanryou');
 var missRouter = require('./routes/miss');
 var uploadRouter = require('./routes/upload.js')
 var tuika2Router = require('./routes/tuika2');
+var Answer_backRouter = require('./routes/Answer_back');
+var mainRouter = require('./routes/main');
+var account_listRouter = require('./routes/account_list');
+var account_additionRouter = require('./routes/account_addition');
+var account_editRouter = require('./routes/account_edit');
+
+
 
 const router = require('./routes/index');
 //読み込んだexpressをapp変数に格納
@@ -43,6 +52,7 @@ const db_conf ={
   password :'Bonobo09040425',
   database :'mydb2',
 }
+
 const pool = mysql.createPoolCluster();
 pool.add('MASTER',db_conf);
 
@@ -59,6 +69,34 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('public'));
 app.use(express.static('images'));
+
+var options = {
+  host: 'localhost',
+  user: 'root',
+  password: 'Bonobo09040425',
+  database: 'mydb2'
+};
+
+var sessionStore = new MySQLStore(options);
+
+const sessionMiddleware = session({
+  secret: 'team_king_oyster_mashroom',
+  resave: false,
+  store: sessionStore,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 30 * 60 * 1000
+  }
+});
+app.use(sessionMiddleware);
+
+var sessionCheck = function(req, res, next) {
+  if (req.session.user) {
+    next();
+  } else {
+    res.redirect('/login');
+  }
+};
 
 //パスを読み込み、ページを移動する際に使用する。
 app.use('/', indexRouter);
@@ -83,6 +121,12 @@ app.use('/kanryou',kanryouRouter);
 app.use('/miss',missRouter);
 app.use('/upload',uploadRouter);
 app.use('/tuika2',tuika2Router);
+app.use('/Answer_back',Answer_backRouter);
+app.use('/main',mainRouter);
+app.use('/account_list',account_listRouter);
+app.use('/account_addition',account_additionRouter);
+app.use('/account_edit',account_editRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -116,4 +160,4 @@ app.post('/',upload.array('uploadfile'),function(req,res){
 })
 
 app.use(cors());
-module.exports = app;
+module.exports = { app,sessionMiddleware };
