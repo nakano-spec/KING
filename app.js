@@ -56,11 +56,8 @@ const db_conf = {
 const pool = mysql.createPoolCluster();
 pool.add('MASTER',db_conf);
 
-/*const pool2 = mysql.createPoolCluster();
-pool.add('MASTER',db_conf2);*/
 
 app.set('pool',pool);
-//app.set('pool2', pool2);
 
 //ejsを使えるようにしている。
 app.set('views', path.join(__dirname, 'views'));
