@@ -37,8 +37,10 @@ router.get('/', (req, res) => {
                 res.status(500).send("Database query error");
                 return;
             }
-            connection.release(); // コネクションをリリース
+            
         });
+        
+        connection.release(); // コネクションをリリース
 
     });
 });
