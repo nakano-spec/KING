@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
   var name1 = req.query.name;
   var app = req.app;
   const sql = "select name from mondai_LIST;"
-  const poolCluster = app.get('pool');
+  const poolCluster = app.get('pool2');
   var pool = poolCluster.of('MASTER');
   pool.getConnection(function(err,connection){
     if(err != null){

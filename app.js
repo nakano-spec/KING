@@ -37,6 +37,12 @@ const router = require('./routes/index');
 //読み込んだexpressをapp変数に格納
 var app = express();
 
+const db_conf2 = {
+  host: 'localhost',
+  user: 'root',
+  password: '20021225',
+  database: 'mydb',
+};
 
 const db_conf ={
   host :'localhost',
@@ -48,6 +54,7 @@ const pool = mysql.createPoolCluster();
 pool.add('MASTER',db_conf);
 
 app.set('pool',pool);
+app.set('pool2', pool2);
 
 //ejsを使えるようにしている。
 app.set('views', path.join(__dirname, 'views'));
