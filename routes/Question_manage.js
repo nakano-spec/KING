@@ -1,47 +1,46 @@
 const express = require('express');
 const router = express.Router();
 
+// 問題の一覧表示
 router.get('/', (req, res) => {
     var app = req.app;
     var QuestionSql = 'SELECT question_name, question_text FROM question_table;';
-    //var QuestionDelete = 'DELETE FROM question_table WHERE question_name = QuestionName;';
-    var poolCluster = app.get('pool2');
-    var pool = poolCluster.of('MASTER');
+    var pool = app.get('pool2').of('MASTER');
 
-    //dbと接続できたか
-    pool.getConnection(function(err1, connection) {
-        if (err1) {
-            console.error("DB connection error:", err1);
-            res.status(500).send("Database connection error");
+    pool.query(QuestionSql, (err, results) => {
+        if (err) {
+            console.error("Query error:", err);
+            res.status(500).send("Database query error");
             return;
         }
+        // クエリの結果をビューに渡す
+        res.render('Question_manage', { questions: results });
+    });
+});
 
-        //表示
-        connection.query(QuestionSql,(err2, results) => {
-            
+// 選択された問題の削除
+router.post('/delete-questions', (req, res) => {
+    var app = req.app;
+    var selectedQuestions = req.body.selectedQuestions;
+    var pool = app.get('pool2').of('MASTER');
 
-            if (err2) {
-                console.error("Query error:", err2);
-                res.status(500).send("Database query error");
-                return;
-            }
-            // クエリの結果をビューに渡す
-            res.render('Question_manage', { questions: results });
-        });
-        
-        //削除
+    if (!selectedQuestions) {
+        return res.redirect('/'); // 選択された問題がない場合、元のページにリダイレクト
+    }
 
-       /* connection.query(QuestionDelete,(err3, results2) => {
-            if (err3) {
-                console.error("Query error:", err3);
-                res.status(500).send("Database query error");
-                return;
-            }
-            
-        });*/
+    if (typeof selectedQuestions === 'string') {
+        selectedQuestions = [selectedQuestions]; // 単一の選択肢の場合、配列に変換
+    }
 
-        connection.release(); // コネクションをリリース
-
+    var QuestionDeleteSql = 'DELETE FROM question_table WHERE question_name IN (?);';
+    
+    pool.query(QuestionDeleteSql, [selectedQuestions], (err) => {
+        if (err) {
+            console.error("Delete query error:", err);
+            res.status(500).send("Database delete query error");
+            return;
+        }
+        res.redirect('/'); // 削除後に元のページにリダイレクト
     });
 });
 
