@@ -31,14 +31,14 @@ router.get('/', (req, res) => {
         
         //削除
 
-        connection.query(QuestionDelete,(err3, results2) => {
+       /* connection.query(QuestionDelete,(err3, results2) => {
             if (err3) {
                 console.error("Query error:", err3);
                 res.status(500).send("Database query error");
                 return;
             }
             
-        });
+        });*/
 
         connection.release(); // コネクションをリリース
 
