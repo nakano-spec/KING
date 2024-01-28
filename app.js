@@ -38,7 +38,9 @@ var mainRouter = require('./routes/main');
 var account_listRouter = require('./routes/account_list');
 var account_additionRouter = require('./routes/account_addition');
 var account_editRouter = require('./routes/account_edit');
-
+var question_listRouter = require('./routes/question_list');
+var question_additionRouter = require('./routes/question_addition');
+var question_editRouter = require('./routes/question_edit');
 
 
 const router = require('./routes/index');
@@ -126,7 +128,9 @@ app.use('/main',mainRouter);
 app.use('/account_list',account_listRouter);
 app.use('/account_addition',account_additionRouter);
 app.use('/account_edit',account_editRouter);
-
+app.use('/question_list',question_listRouter);
+app.use('/question_addition',question_additionRouter);
+app.use('/question_edit',question_editRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

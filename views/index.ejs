@@ -45,8 +45,9 @@
           window.location.href ='/hyou3?data=' + encodeURIComponent(de);
         })
 
-        socket.on('kekkahyouji2',function(cell){
-          window.location.href='/hyou4';
+        socket.on('result_display2',function(data){
+          console.log(data.username);
+          //window.location.href='/hyou4';
         })
     </script>
   </body>

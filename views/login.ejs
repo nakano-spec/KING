@@ -123,6 +123,11 @@
         }
       }) 
 
+      socket.on('login_error',function(){
+        if(flug == 0) {
+          window.confirm('ユーザー名またはパスワードが間違っています。\n再度入力し直してください。');
+        }
+      }) 
     </script>
 </body>
 </html>

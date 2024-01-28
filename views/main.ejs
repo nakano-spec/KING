@@ -70,13 +70,14 @@
     </style>
 </head>
 <body>
+    <script src="/socket.io/socket.io.js"></script>
     <div class="container">
         <header>
             <h1>メインページ</h1>
             <% if (name) { %>
-                <p><%= name %></p>
+                <p id="username"><%= name %></p>
               <% } else { %>
-                <p>guest</p>
+                <p id="username">guest</p>
               <% } %>              
         </header>
         <main>
@@ -103,13 +104,14 @@
         </main>
     </div>
     <script>
-        var userName = document.getElementById('username').textContent;
+        var socket = io();
         document.getElementById('post-question-button').addEventListener('click', function() {
-            window.location.href = '/mondai?name=' + encodeURIComponent(userName); // 問題出題画面のURL
+            var page_update_No = 1;
+            socket.emit('pageupdate',page_update_No);
         });
 
         document.getElementById('question-list-button').addEventListener('click', function() {
-            window.location.href = '/question-list.html'; // 問題一覧画面のURL
+            window.location.href = '/question_list'; // 問題一覧画面のURL
         });
 
         document.getElementById('account-list-button').addEventListener('click', function() {
@@ -117,9 +119,16 @@
         });
 
         document.getElementById('logout-button').addEventListener('click', function() {
-            window.location.href = '/'; // ログイン画面のURL
+            socket.emit('logout');
         });
 
+        socket.on('page_updatecomplete',function(){
+             window.location.href = '/mondai'; // 問題出題画面のURL
+        });
+
+        socket.on('logout_complete',function(){
+            window.location.href = '/'; // ログイン画面のURL
+        })
     </script>
 </body>
 </html>
