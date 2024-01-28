@@ -1,6 +1,6 @@
 const express = require("express");
 var router = express.Router();
-const mysql = require("mysql2");
+const mysql = require("mysql");
 /*const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -16,7 +16,7 @@ router.get("/", (req, res)=>{
     const sql3 = "select k.kai_keisiki,m.mon_ID from kaikeisiki_LIST k, mondai_LIST m where m.sentaku = '1' and m.kai_ID = k.kai_ID;"
     const sql4 = "select h.han_keisiki from hankeisiki_LIST h,monhan_LIST m where h.han_ID = m.han_ID and m.mon_ID = ?;"
     var app = req.app;
-    var poolCluster = app.get("pool2");
+    var poolCluster = app.get("pool");
     var pool = poolCluster.of('MASTER');
     pool.getConnection(function(err,connection){
         connection.query(sql, (err, result, fields)=>{

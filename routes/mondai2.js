@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 //const mysql = require("mysql");
-const mysql = require('mysql2');
+const mysql = require('mysql');
 
 /*const connection = mysql.createConnection({
     host: "localhost",
@@ -18,7 +18,7 @@ const mysql = require('mysql2');
 router.get('/', function(req, res, next) {
   var by = req.query.byou
   var app = req.app;
-  var poolCluster = app.get("pool2");
+  var poolCluster = app.get("pool");
   var pool = poolCluster.of('MASTER');
   const sql1 = "select mon_ID from mondai_LIST where sentaku = '1';"
   const sql2 = "insert into time_LIST(mon_ID,time) values(?,?);"
