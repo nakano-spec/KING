@@ -4,7 +4,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
     var app = req.app;
     var QuestionSql = 'SELECT question_name, question_text FROM question_table;';
-    var QuestionDelete = 'DELETE FROM question_table WHERE question_name = QuestionName;';
+    //var QuestionDelete = 'DELETE FROM question_table WHERE question_name = QuestionName;';
     var poolCluster = app.get('pool2');
     var pool = poolCluster.of('MASTER');
 
@@ -39,7 +39,7 @@ router.get('/', (req, res) => {
             }
             
         });
-        
+
         connection.release(); // コネクションをリリース
 
     });
