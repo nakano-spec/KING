@@ -6,6 +6,7 @@ router.get('/', function(req, res, next) {
   var pool = req.app.get('pool');
 
   const sql = "SELECT name FROM mondai_LIST;";
+  console.log(sql);
   pool.query(sql, (err, result1) => {
     if (err) {
       console.error(err);
