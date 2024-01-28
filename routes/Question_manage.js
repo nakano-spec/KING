@@ -26,11 +26,11 @@ router.get('/', (req, res) => {
                 return;
             }
             // クエリの結果をビューに渡す
-            res.render('Question_manage', { questions: results2 });
+            res.render('Question_manage', { questions: results });
         });
         
         //削除
-        
+
         connection.query(QuestionDelete,(err3, results2) => {
             if (err3) {
                 console.error("Query error:", err3);
