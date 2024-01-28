@@ -16,7 +16,8 @@ router.get('/', (req, res) => {
             return;
         }
 
-        connection.query(QuestionSql, (err2, results) => {
+        //表示
+        connection.query(QuestionSql,(err2, results) => {
             
 
             if (err2) {
@@ -24,10 +25,21 @@ router.get('/', (req, res) => {
                 res.status(500).send("Database query error");
                 return;
             }
-            connection.release(); // コネクションをリリース
             // クエリの結果をビューに渡す
-            res.render('Question_manage', { questions: results });
+            res.render('Question_manage', { questions: results2 });
         });
+        
+        //削除
+        
+        connection.query(QuestionDelete,(err3, results2) => {
+            if (err3) {
+                console.error("Query error:", err3);
+                res.status(500).send("Database query error");
+                return;
+            }
+            connection.release(); // コネクションをリリース
+        });
+
     });
 });
 

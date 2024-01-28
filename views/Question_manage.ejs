@@ -31,6 +31,7 @@
     </tr>
     <% questions.forEach(function(question) { %>
         <tr>
+            <td><input type="radio" name="selectedQuestion" value="<%= question.question_name %>"></td>
             <td><%= question.question_name %></td>
             <td><%= question.question_text %></td>
         </tr>
