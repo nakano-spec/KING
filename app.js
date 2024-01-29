@@ -9,6 +9,7 @@ var cors = require('cors');
 var mysql = require('mysql2');
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
+var cookies = require('js-cookie')//いちむら追加分：Cookieの扱いを楽にするやつ
 
 //パス情報を変数に格納している。
 var indexRouter = require('./routes/index');
