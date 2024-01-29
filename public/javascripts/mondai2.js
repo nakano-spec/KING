@@ -21,7 +21,8 @@ n.okuru.addEventListener('click',function(e){
 }
  let element= s.selectedIndex;
  var a = s.options[element].innerText;
- socket.emit('mondai_btnclick',a,o);
+ //let newwin = open("/h");
+ socket.emit('mondai_btnclick',a,o); //mondai
 })
 
 n.kakunin.addEventListener('click',function(e){
@@ -47,3 +48,9 @@ socket.on('mondai_kekka',function(flag){
 }
 }
 )
+
+//ハンバーガーメニュー用
+
+document.getElementById("hambtn").onclick = function(){
+  document.querySelector('html').classList.toggle('open');
+}

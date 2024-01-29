@@ -51,6 +51,7 @@ router.get("/", (req, res)=>{
             connection.query(sql2,roomID,(err,result2,fields)=>{
                 if(err){
                     console.log(err);*/
+
                 }
                 var question = result2[0].question_ID;
                 callback(null,roomID,question,connection);

@@ -79,7 +79,9 @@ const db_conf2 ={
   
   //myoujin_password
   //password :'20021225'
-
+  
+  //yoshida_password
+  //password :'ha031008',
 const pool = mysql.createPoolCluster();
 pool.add('MASTER',db_conf);
 
