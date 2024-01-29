@@ -3,15 +3,10 @@ var router = express.Router();
 const mysql = require("mysql2");
 const async = require('async');
 const connection = mysql.createConnection({
-      host :'localhost',
-      user :'root',
-      password :'ha031008',
-      database :'mydb2',
-/*host: "localhost",
+host: "localhost",
 user: "root",
 password: "20010426",
-database: "mydb2"*/
-
+database: "mydb2"
 });
 connection.connect();
 

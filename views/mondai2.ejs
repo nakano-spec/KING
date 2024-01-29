@@ -2,27 +2,9 @@
 <html lang = "ja">
 <head>
     <meta charset ="utf-8">
-    <title>問題出題</title>
+    <title>問題選択</title>
     <link type="text/css" rel="stylesheet" href="/stylesheets/mondai2.css">
-</head>  
-<header>
-  <nav>
-    <h1 class = "title">問題出題画面</h1>
-  </nav>
-</header>
-
-<!--ハンバーガー作成-->
-<nav class="ham_menu">
-  <ul class="ham">
-    <li><a href="#">Home</a></li>
-    <li><a href="#">Menu</a></li>
-    <li><a href="#">News</a></li>
-    <li><a href="#">Contact</a></li>
-  </ul>
-  <button type="button" id="hambtn"></button>
-</nav>
-<!--ハンバーガー作成-->
-
+</head>
 <body>
     <script src="/socket.io/socket.io.js"></script>
     <p id="userName" data-name="<%= name %>"><%= name %></p>
@@ -31,25 +13,7 @@
     <form name ="f1">
         <div class="parent">
         <div class="child">
-        <input type ="submit" name="tuika" class = "tui"value="問題追加">
-        <br>
-        <br>
-        <input type="submit" name="kakunin"class = "tui2" value="問題確認">
         </div>
-        </div>
-        <p>問題を選択してください。</p>
-        <!--資格名
-        <select name = "quali_name" class = "cp_sl02" required>
-          <% web.forEach((list) => { %>
-            <option><%= list.qualification_name %></option> 
-            <% }) %>
-          </select>-->
-        <!--問題名-->
-        <select  name = "mo1" class="cp_sl02" required>
-           <% web.forEach((list) => { %>
-            <option><%= list.question_name %></option> 
-
-       <!-- </div>
         </div>
         <p>試験名を選択してください。</p>
         <select id="qualification-select" name = "mo1" class="cp_sl02" required>
@@ -70,7 +34,7 @@
           <% web.forEach((list) => { %>
             <option><%= list.question_name %></option>
             <% }) %>
-        </select> --%>
+        </select>
 
         <p>ジャンルを選択してください。</p>
         <select id="genre-select" name="genre">
@@ -81,7 +45,7 @@
         <span class="cp_sl02_highlight"></span>
         <span class="cp_sl02_selectbar"></span>
         <br>
-        <p>回答の正否判定の仕方を選択してください。</p>
+        <p>回答の成否判定の仕方を選択してください。</p>
         <br>
         <input type="radio" name = "hantei" value="自動">自動
         <input type="radio" name = "hantei" value="手動">手動
@@ -99,7 +63,6 @@
         <br>
         <input type="submit" name="check" class = "tui" value="問題確認">
         <br>
-        <input type ="submit" class ="button" name = "okuru" value="出題する">
         <br>
         <input type="submit" name="display" class = "tui" value="問題表示">
     </form>
