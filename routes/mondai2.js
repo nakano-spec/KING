@@ -15,6 +15,7 @@ const mysql = require("mysql");
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   var by = req.query.byou;
+  by = Math.abs(by);
   var app = req.app;
   var poolCluster = app.get("pool");
   var pool = poolCluster.of('MASTER');
@@ -40,6 +41,6 @@ router.get('/', function(req, res, next) {
     byou1:by
   }
   res.render('mondai3.ejs',data1);
-});
+}); 
 
 module.exports = router;

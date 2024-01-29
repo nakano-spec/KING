@@ -4,7 +4,8 @@ var f  = document.forms.myform2;
             var rend = document.getElementById('my');
             var inner2 = rend.innerText;  //入力値を受け取る
             var minites = parseInt(inner2/60,10); //分を取得
-            var seconds = Math.floor(inner2%60); //秒を取得
+            var seconds = Math.round(inner2%60); //秒を取得
+            seconds = Math.abs(seconds);
 
             remain.innerText=minites;
             remain2.innerText=seconds;
