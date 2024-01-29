@@ -14,12 +14,6 @@ var cookies = require('js-cookie')//いちむら追加分：Cookieの扱いを�
 
 //パス情報を変数に格納している。
 var indexRouter = require('./routes/index');
-var accountRouter = require('./routes/account');
-var account_additionRouter = require('./routes/account_addition');
-var account_additionMethodRouter = require('./routes/account_additionMethod');
-var account_additionCSVRouter = require('./routes/account_additionCSV');
-var account_additionCSVExplanationRouter = require('./routes/account_additionCSVExplanation');
-var account_additionChangeRouter = require('./routes/account_additionChange');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var helloRouter = require('./routes/hello');
@@ -68,17 +62,14 @@ const db_conf2 ={
   password :'20021225',
   database :'mydb2',
 }
-  //shimamura_password
-  //password :'matosui122083',
 
-  //ichi_password
-  //password :'Bonobo09040425',
-  
-  //nakano_password
-  //password :'20010426',
-  
-  //myoujin_password
-  //password :'20021225'
+
+  password :'Bonobo09040425',
+
+  password :'20010426',
+
+  database :'mydb2',
+}
 
 const pool = mysql.createPoolCluster();
 pool.add('MASTER',db_conf);
@@ -135,12 +126,6 @@ var sessionCheck = function(req, res, next) {
 
 //パスを読み込み、ページを移動する際に使用する。
 app.use('/', indexRouter);
-app.use('/account', accountRouter);
-app.use('/account_addition', account_additionRouter);
-app.use('/account_additionMethod', account_additionMethodRouter);
-app.use('/account_additionCSV', account_additionCSVRouter);
-app.use('/account_additionCSVExplanation', account_additionCSVExplanationRouter);
-app.use('/account_additionChange', account_additionChangeRouter);
 app.use('/users', usersRouter);
 app.use('/hello',helloRouter);
 app.use('/new_player',newplayerRouter);
