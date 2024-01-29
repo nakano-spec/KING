@@ -8,25 +8,7 @@ router.get("/", (req, res)=>{
     var app = req.app;
     var poolCluster = app.get("pool");
     var pool = poolCluster.of('MASTER');
-    pool.getConnection(function(err,connection){
-        connection.query(sql, (err, result, fields)=>{ //sqlでとってきた内容をresultに配列で格納している
-            if(err)throw err;
-            console.log(result);
-            var r1 = result.length;
-            connection.query(sql2,(err,result2,fields)=>{
-                var r2 =result2.length; 
-                console.log(result2);
-                console.log(r1);
-                console.log(r2);
-                for(var i = 0; i<r1;i++){
-                    for(var j = 0;j<r2;j++){
-                        if(result[i].han == "○"){
-                        }else if(result[i].kai == result2[j].seikai){
-                            result[i].han = "○";
-                        }
-                    }
-
-    /*async.waterfall([
+    async.waterfall([
         function(callback){
             pool.getConnection(function(err,connection) {
                 if(err != null){
@@ -50,7 +32,7 @@ router.get("/", (req, res)=>{
             var sql2 = 'select question_ID from question_log where room_ID = ? and question_status = 1;';
             connection.query(sql2,roomID,(err,result2,fields)=>{
                 if(err){
-                    console.log(err);*/
+                    console.log(err);
                 }
                 var question = result2[0].question_ID;
                 callback(null,roomID,question,connection);
@@ -71,21 +53,6 @@ router.get("/", (req, res)=>{
                 connection.query(sql4,array.user_ID,(err,result4,field)=>{
                     if(err){
                         console.log(err);
-                    }else if(result3[0].kai_keisiki == "選択"){
-                        connection.query(sql4,result3[0].mon_ID,(err,result4,field)=>{
-                        if(result4[0].han_keisiki == "手動"){
-                            res.render('mondai5',{web : result});
-                        }else if(result4[0].han_keisiki == "自動")
-                        res.render("mondai4", { web: result}); //resultの内容をwebって言う変数に格納し直し、mondai4に送る。
-                        })
-                    }else if(result3[0].kai_keisiki == "入力"){
-                        connection.query(sql4,result3[0].mon_ID,(err,result4,field)=>{
-                            if(result4[0].han_keisiki == "手動"){
-                                res.render("mondai5", { web: result});
-                            }else if(result4[0].han_keisiki == "自動"){
-                                res.render("mondai6",{ web: result});
-                            }
-                        })
                     }
                     array.user_name = result4[0].user_name
                 })
