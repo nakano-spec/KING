@@ -130,6 +130,11 @@
         });
 
         document.getElementById('account-list-button').addEventListener('click', function() {
+            socket.request.session.page = {page:'mondai2.ejs'};
+            socket.request.session.Before_page = {Before_page:'main.ejs'};
+            socket.request.session.save();
+            console.log(socket.request.session);
+            callback(null,'done');
             window.location.href = '/account_list'; // アカウント一覧画面のURL
         });
 
