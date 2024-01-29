@@ -38,6 +38,6 @@ if(p3 == 0 && p4 == 0){
         window.location.href ='/hyou3?data=' + encodeURIComponent(de);
       })
 
-      socket.on('kekkahyouji2',function(url){
-        window.location.href = url;
+      socket.on('kekkahyouji2',function(){
+        window.location.href='/hyou4';
       })

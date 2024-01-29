@@ -1,4 +1,4 @@
-            var f  = document.forms.myform2;
+var f  = document.forms.myform2;
             var socket = io();
             var rend = document.getElementById('my');
             var p2 = rend.innerText;

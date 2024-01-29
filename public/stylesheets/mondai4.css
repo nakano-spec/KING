@@ -1,9 +1,3 @@
-.scroll-container {
-  display: flex;
-  max-height: 400px; /* 望ましい最大高さ */
-  overflow-y: auto; /* 垂直方向のスクロールを有効にする */
-  padding: 10px;
-}
 table{
   border-color: collapse;
   text-align: center;

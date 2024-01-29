@@ -6,6 +6,7 @@ const newDiv = document.createElement("div");
 var col = col;
 var er = 0;
 var value = 0;
+console.log(col);
 let array = new Array(col-1);
 console.log(table.rows[1].cells[1].innerHTML);
 console.log(table.rows[1].cells[3].textContent);
@@ -14,15 +15,20 @@ for(let i = 1;i<col;i++)
   const newBtn = document.createElement("button");
   newBtn.innerHTML ="表示";
   newBtn.value =i;
-  newBtn.style="width: 100px; height: 60px; display:flex; flex-flow: column; position: relative; top:55px;";
+  newBtn.style="width: 100px; height: 38px; display:flex; flex-flow: column; position: relative; top:55px;";
   newBtn.onclick = () => {
-    var c = table.rows[i].cells[4].innerHTML;
+    var c = table.rows[i].cells[1].innerHTML;
     socket.emit('hyou',c);
   }
   newDiv.appendChild(newBtn);
   div1.appendChild(newDiv);
 }
 var a = 0
+for(var b = 1;b < col ;b++){
+  table.rows[b].cells[3].innerHTML = '<input type="radio" value="○" name=' + a + '>○</td>';
+  table.rows[b].cells[4].innerHTML = '<input type="radio" value="✕" name=' + a + '>✕</td>';
+  a = a + 1;
+}
 
 f.kekka.addEventListener('click',function(e){
   e.preventDefault();

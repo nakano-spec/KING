@@ -38,96 +38,18 @@
                       </div>
                   </div> 
                   <br>
-                  <select name = "select1" required style = "width: 30%;height: 50px;font-size: 20px;text-align: center;padding: 10px;position: relative;top: 10px;">
-                    <% data.forEach((list) => { %>
-                      <option><%= list.user_name %></option>
-                    <% }) %>
-                  </select>
-                  <br>
-                  <br>
                   <input type="submit" name="button" value="ログイン" class="s"></button>
             </form>
         </table>
+        <div class = "su">
+          <br>
+          <button class = "sinki"onclick="location.href='/new_player'">新規登録</button>
+        </div>
     </div>
     <div class="container">
     <ul id="mondai"></ul><!--socketでメッセ表示するところ-->
     </div>
-    <script>
-      //socket.ioを読み込む。
-      var socket = io();
-      //
-      //データを読み込む
-      var f = document.forms.myform;
-      var flug = 0;
-      var token = 0;
-      var mondai = document.getElementById('mondai');
-      var item = document.createElement('h3');
-      //
-
-      //ログインボタンが押されたら行う処理
-      f.button.addEventListener('click',function(e){
-        //formの自動送信処理を阻止
-        e.preventDefault();
-        //
-
-        //ユーザーIDとパスワード、セレクトボックスの中身を取得しオブジェクトにする。
-        var name1 = f.name.value;
-        var passwordInput = f.password1;
-        var form = document.forms.myform;
-        var selectBox = form.select1;
-        var data = {
-            username: name1,
-            password: passwordInput.value,
-            selectedOption: selectBox.value,
-        };
-        //
-        //wwwのlogin_btnclickにdataをSocket.ioに送信する。
-        socket.emit('login_btnclick',data);
-      })
-
-      //ログインしたユーザーが先生だった場合の処理
-      socket.on('login_flug',function(flug,name){
-        if(flug == 1) {
-          window.location.href = 'main?name=' + encodeURIComponent(name);
-        }else if(flug == 0){
-          console.log('パスワードが不一致、または登録されていないuserデータです。');
-        }
-      })
-      //
-
-      //ログインしたユーザーが学生だった場合
-      socket.on('login_flug1',function(flug,name){
-        if(flug == 1) {
-          window.location.href = '/kaitou?name=' + encodeURIComponent(name);
-        }else if(flug == 0){
-          item.textContent = 'パスワードが不一致、または登録されていないuserデータです。';
-          mondai.appendChild(item);
-        }
-      })
-      //
-
-      //ログインしたユーザーが表示用アカウントだった場合
-      socket.on('login_flug2',function(flug,name){
-        if(flug == 1) {
-          window.location.href = '/hyouji2?name=' + encodeURIComponent(name);
-        }else if(flug == 0){
-          item.textContent = 'パスワードが不一致、または登録されていないuserデータです。';
-          mondai.appendChild(item);
-        }
-      })
-
-      //ログインが失敗したときの処理
-      socket.on('new_flug',function(flug){
-        if(flug == 0) {
-          console.log('ユーザー名とパスワードが違います。');
-        }
-      }) 
-
-      socket.on('login_error',function(){
-        if(flug == 0) {
-          window.confirm('ユーザー名またはパスワードが間違っています。\n再度入力し直してください。');
-        }
-      }) 
+    <script src="/javascripts/login.js">
     </script>
 </body>
 </html>

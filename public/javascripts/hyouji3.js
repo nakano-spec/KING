@@ -15,8 +15,7 @@ var socket = io();
         socket.on('hyouji',function(de){
               window.location.href ='/hyou3?data=' + encodeURIComponent(de);
         })
-
         //先生側からサーバーを経由して結果表示命令が来た場合'/hyou4'にセットされたパスのファイルに送る。
         socket.on('kekkahyouji2',function(){
-            window.location.href='/hyou4';
-         })
+              window.location.href='/hyou4';
+            })
