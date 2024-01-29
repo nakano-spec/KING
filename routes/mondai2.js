@@ -4,29 +4,27 @@ const mysql = require("mysql");
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  var by = req.query.byou;
-  by = Math.abs(by);
-  var app = req.app;
-  var poolCluster = app.get("pool");
-  var pool = poolCluster.of('MASTER');
-  const set_time = "UPDATE question_log SET limit_time  = ? WHERE question_status = 1 AND room_ID = 1;"
   var second1 = parseInt(req.query.second);
   var name1 = req.query.name;
   /*const sql1 = "select mon_ID from mondai_LIST where sentaku = '1';"
   const sql2 = "insert into time_LIST(mon_ID,time) values(?,?);"
   pool.getConnection(function(err,connection) {
     if(err != null){
-      console.log("DB接続" + err);
+      console.log(err);
       return;
     }
-
-    connection.query(set_time,[by],(err,result,fields) =>{
     connection.query(sql1,(err,result,fields) =>{
       if(err){
-        console.log("時間" + err);
+        console.log(err);
       }
-      connection.commit((err) =>{
-        if(err){connection.rollback(() =>{throw console.log('error');});}
+      var name1 = result[0].mon_ID;
+      connection.query(sql2,[name1,by],(err,results2,fields) =>{
+        if(err){
+          console.log(err);
+        }
+        connection.commit((err) =>{
+          if(err){connection.rollback(() =>{throw console.log('error');});}
+        })
       })
     })
     console.log("追加しました。");
@@ -40,6 +38,6 @@ router.get('/', function(req, res, next) {
     name:name1
   }
   res.render('mondai3.ejs',data1);
-}); 
+});
 
 module.exports = router;
