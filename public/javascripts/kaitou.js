@@ -2,7 +2,7 @@
 var socket = io();
 var f = document.forms.s1;
 var mydiv = document.getElementById("myid");
-
+console.log(mydiv.innerText);
 
 var log = function(){
     window.location.href ='/kaitou2?name=' + encodeURIComponent(mydiv.innerText);
