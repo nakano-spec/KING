@@ -4,10 +4,18 @@ var flug = 0;
 var token = 0;
 var mondai = document.getElementById('mondai');
 var item = document.createElement('h3');
+var name1 = f.name.value;
+var password = f.password1.value;
+
 
 f.button.addEventListener('click',function(e){
   e.preventDefault();
-  socket.emit('login_btnclick',f.name.value,f.password1.value);
+  socket.emit('crypto1',name1);
+  //socket.emit('login_btnclick',f.name.value,f.password1.value);
+})
+
+socket.on('crypto',function(data){
+  console.log(data);
 })
 
 socket.on('login_flug',function(flug,name){

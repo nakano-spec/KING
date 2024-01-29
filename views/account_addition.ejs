@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>アカウント追加</title>
+    <!-- 必要なCSSやJavaScriptを追加 -->
+    <style>
+        /* タブのスタイル */
+        .tab {
+            cursor: pointer;
+            padding: 10px;
+            margin: 10px;
+            background-color: #f4f4f4;
+            display: inline-block;
+            border: 1px solid #ddd;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: none;
+        }
+        /* コンテンツエリアのスタイル */
+        .content {
+            border: 1px solid #ddd;
+            padding: 20px;
+        }
+        /* 非表示のコンテンツ */
+        .content.hidden {
+            display: none;
+        }
+
+        .drop-area {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .drop-area.hover {
+            border-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <script src="/socket.io/socket.io.js"></script>
+    <h1>アカウント追加</h1>
+
+    <!-- タブ -->
+    <div class="tab" id="tab-csv">CSVファイル追加</div>
+    <div class="tab" id="tab-manual">手入力追加</div>
+
+    <!-- CSVファイル追加コンテンツ -->
+    <div class="content" id="content-csv">
+        <div class="drop-area" id="drop-area">
+            <p>CSVファイルをここにドラッグアンドドロップ、またはクリックしてファイルを選択</p>
+            <input type="file" id="file-input" accept=".csv" style="display: none;">
+        </div>
+    </div>
+
+    <!-- 手入力追加コンテンツ -->
+    <div class="content hidden" id="content-manual">
+        <form id="manual-form">
+            <div>
+                <label>学籍番号: <input type="text" name="user_id"></label>
+            </div>
+            <div>
+                <label>名前: <input type="text" name="user_name"></label>
+            </div>
+            <div>
+                <label>パスワード: <input type="text" name="pass_word"></label>
+            </div>
+            <div>
+                <label>ユーザータイプ:
+                    <select name="user_type">
+                        <option value="student">学生</option>
+                        <option value="teacher">先生</option>
+                    </select>
+                </label>
+            </div>
+            <button type="submit">追加</button>
+        </form>
+    </div>
+
+    <!-- 追加完了通知 -->
+    <div id="completion-notification" style="display: none;">
+        <p>アカウントの追加が完了しました。</p>
+        <button id="back-button">戻る</button>
+    </div>
+
+    <script>
+        var socket = io(); // Socket.ioのインスタンス
+        // タブの切り替え処理
+        var dropArea = document.getElementById('drop-area');
+        var fileInput = document.getElementById('file-input');
+        document.getElementById('tab-csv').addEventListener('click', function() {
+            document.getElementById('content-csv').classList.remove('hidden');
+            document.getElementById('content-manual').classList.add('hidden');
+            this.classList.add('active');
+            document.getElementById('tab-manual').classList.remove('active');
+        });
+        
+        document.getElementById('tab-manual').addEventListener('click', function() {
+            document.getElementById('content-manual').classList.remove('hidden');
+            document.getElementById('content-csv').classList.add('hidden');
+            this.classList.add('active');
+            document.getElementById('tab-csv').classList.remove('active');
+        });
+
+        dropArea.addEventListener('click', function() {
+        fileInput.click();
+    });
+
+    dropArea.addEventListener('dragover', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        dropArea.classList.add('hover');
+    });
+
+    dropArea.addEventListener('dragleave', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        dropArea.classList.remove('hover');
+    });
+
+    dropArea.addEventListener('drop', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        dropArea.classList.remove('hover');
+
+        var files = event.dataTransfer.files;
+        if (files.length) {
+            // ファイル処理
+            console.log(files[0]); // ここでファイルを処理
+        }
+    });
+
+        // 手入力フォームの送信処理
+        document.getElementById('manual-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var formData = {
+                user_ID: this.user_id.value,
+                user_name: this.user_name.value,
+                pass_word: this.pass_word.value,
+                user_type: this.user_type.value
+            };
+
+            socket.emit('add_account', formData);
+        });
+
+        // アカウント追加完了の通知を受け取る
+        socket.on('account_added', function() {
+            document.getElementById('content-manual').style.display = 'none';
+            document.getElementById('completion-notification').style.display = 'block';
+        });
+
+        // 戻るボタンの処理
+        document.getElementById('back-button').addEventListener('click', function() {
+            window.location.href = '/account_list'; // 指定ページへの遷移
+        });
+    </script>
+    </body>
+</html>
