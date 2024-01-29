@@ -258,3 +258,17 @@ body{
       color: #000000;
     }
   }
+
+/* 親要素に適用するスタイル */
+/*.parent {
+    display: flex;
+    justify-content: space-around; 
+    align-items: center; 
+    flex-wrap: wrap; 
+}
+
+
+.parent select {
+    margin: 5px; 
+}*/
+

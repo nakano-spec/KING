@@ -1,4 +1,4 @@
-var f  = document.forms.myform2;
+            var f  = document.forms.myform2;
             var socket = io();
             //値設定
             var rend = document.getElementById('my');

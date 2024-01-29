@@ -93,6 +93,7 @@
           const newBtn = document.createElement("button");
           newBtn.innerHTML ="表示";
           newBtn.value =i;
+          newBtn.style="width: 100px; height: 80px; display:flex; flex-flow: column; position: relative; top:35px; margin-bottom: 1px; text-align:center; justify-content: center;align-items:center;";
           newBtn.style="width: 100px; height: 60px; display:flex; flex-flow: column; position: relative; top:35px; margin-bottom: 1px; text-align:center; justify-content: center;align-items:center;";
           newBtn.onclick = () => {
             var cell = table.rows[i].cells[4].innerHTML;

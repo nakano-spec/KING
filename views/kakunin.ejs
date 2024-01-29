@@ -4,19 +4,22 @@
         <title>問題確認</title>
     </head>
     <body>
-        <p><%= data[0].name %></p>
-        <br>
-        <h1><%= data[0].mondaibun %></h1>
-        <br>
-        <br>
-        <p><label>ア</label>　<%= data[0].sen1 %></p>
-        <br>
-        <p><label>イ</label>　<%= data[0].sen2 %></p>
-        <br>
-        <p><label>ウ</label>　<%= data[0].sen3 %></p>
-        <br>
-        <p><label>ェ</label>　<%= data[0].sen4 %></p>
-        <br>
-        <h1><label>回答</label>　<%= data[0].seikai %></h1>
+        <h1>問題確認</h1>
+        <p>試験名: <%= qualification %><%= Year %> <%= question_name %> <%= genre %></p>
+    
+        <% results.forEach(function(item) { %>
+            <div>
+                <!-- ここでitemのプロパティを表示 -->
+                <h1><%= item.question_text %></h1>
+                <p>ア:<%= item.select_1 %></p>
+                <p>イ:<%= item.select_2 %></p>
+                <p>ウ:<%= item.select_3 %></p>
+                <p>エ:<%= item.select_4 %></p>
+                <br>
+                <br>
+                <p>正解:<%= item.answer %></p>
+            </div>
+        <% }); %>
+        <input type="button" onclick="window.history.back();" value="直前のページに戻る">
     </body>
 </html>

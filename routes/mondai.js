@@ -31,9 +31,9 @@ router.get('/', function(req, res, next) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  var name1 = req.query.name;
   var app = req.app;
   const sql = "select question_name from question_table;"  //リスト表示用SQL
+  //const sql = "select distinct q.question_name,g.qualification_name,g.question_genre,g.question_years from question_table q JOIN genre_table g ON q.question_id = g.question_id;"
   const poolCluster = app.get('pool');
   var pool = poolCluster.of('MASTER');
   pool.getConnection(function(err,connection){
@@ -46,7 +46,7 @@ router.get('/', function(req, res, next) {
         console.log(err);
       }
       var data = {
-        name:name1,
+        name:req.session.user.username,
         web:result1
       }
       res.render('mondai2',data);
