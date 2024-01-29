@@ -33,7 +33,7 @@ router.get('/', function(req, res, next) {
   var data1={
     byou1:by
   }*/
-  var data1 ={
+  var data1　={
     second:second1,
     name:name1
   }

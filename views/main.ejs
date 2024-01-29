@@ -70,6 +70,7 @@
     </style>
 </head>
 <body>
+    <script src="/socket.io/socket.io.js"></script>
     <div class="container">
         <header>
             <h1>メインページ</h1>
@@ -77,6 +78,9 @@
                 <p><%= name %></p>
               <% } else { %>
                 <p>guest</p>
+                <p id="username"><%= name %></p>
+              <% } else { %>
+                <p id="username">guest</p>
               <% } %>              
         </header>
         <main>
@@ -142,7 +146,6 @@
             socket.request.session.destoroy;
             window.location.href = '/'; // ログイン画面のURL
         });
-
     </script>
 </body>
 </html>

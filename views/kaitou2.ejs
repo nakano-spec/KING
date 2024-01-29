@@ -13,33 +13,17 @@
         <h1><%= question_text %></h1>
         <br>
         <form name="myform1">
-        
-        <div class="radiobox">
-            <input id="radio1" class="radiobutton" name="hoge" type="radio" value="ア" />
-            <label for="radio1">ア</label><%= select_1 %>
-            <br>
-            <br>
-            <br>
-            <br>
-            <input id="radio2" class="radiobutton" name="hoge" type="radio" value="イ" />
-            <label for="radio2">イ</label><%= select_2%>
-            <br>
-            <br>
-            <br>
-            <br>
-            <input id="radio3" class="radiobutton" name="hoge" type="radio" value="ウ" />
-            <label for="radio3">ウ</label><%= select_3 %>
-            <br>
-            <br>
-            <br>
-            <br>
-            <input id="radio4" class="radiobutton" name="hoge" type="radio" value="ェ" />
-            <label for="radio4">エ</label><%= select_4 %>
-            <br>
-            <br>
-            <br>
-            <input type = "submit"class="s" name="kaitou1" value ="回答を送る" >
-        </div>
+            <div class="radiobox">
+                <input id="radio1" class="radiobutton1" name="hoge" type="radio" value="ア" />
+                <label for="radio1">ア. <%= select_1 %></label>
+                <input id="radio2" class="radiobutton2" name="hoge" type="radio" value="イ" />
+                <label for="radio2">イ. <%= select_2 %></label>
+                <input id="radio3" class="radiobutton3" name="hoge" type="radio" value="ウ" />
+                <label for="radio3">ウ. <%= select_3 %></label>
+                <input id="radio4" class="radiobutton4" name="hoge" type="radio" value="エ" />
+                <label for="radio4">エ. <%= select_4 %></label>
+                <input type = "submit"class="s" name="kaitou1" value ="回答を送る" >
+            </div>
         </form>
         <script>
             var socket = io();

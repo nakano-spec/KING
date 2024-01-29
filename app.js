@@ -11,6 +11,7 @@ var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 var cookies = require('js-cookie')//いちむら追加分：Cookieの扱いを楽にするやつ
 
+
 //パス情報を変数に格納している。
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -39,6 +40,9 @@ var mainRouter = require('./routes/main');
 var account_listRouter = require('./routes/account_list');
 var account_additionRouter = require('./routes/account_addition');
 var account_editRouter = require('./routes/account_edit');
+var question_listRouter = require('./routes/question_list');
+var question_additionRouter = require('./routes/question_addition');
+var question_editRouter = require('./routes/question_edit');
 
 
 
@@ -50,7 +54,11 @@ var app = express();
 const db_conf ={
   host :'localhost',
   user :'root',
+
   password :'Bonobo09040425',
+
+  password :'20010426',
+
   database :'mydb2',
 }
 
@@ -74,7 +82,11 @@ app.use(express.static('images'));
 var options = {
   host: 'localhost',
   user: 'root',
+
   password: 'Bonobo09040425',
+
+  password: '20010426',
+
   database: 'mydb2'
 };
 
@@ -127,6 +139,9 @@ app.use('/main',mainRouter);
 app.use('/account_list',account_listRouter);
 app.use('/account_addition',account_additionRouter);
 app.use('/account_edit',account_editRouter);
+app.use('/question_list',question_listRouter);
+app.use('/question_addition',question_additionRouter);
+app.use('/question_edit',question_editRouter);
 
 
 // catch 404 and forward to error handler

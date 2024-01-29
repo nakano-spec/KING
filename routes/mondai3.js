@@ -4,7 +4,7 @@ const mysql = require("mysql");
 var async = require("async");
 
 router.get("/", (req, res)=>{
-    var name = req.query.name;
+    var name = req.session.user.username;
     var app = req.app;
     var poolCluster = app.get("pool");
     var pool = poolCluster.of('MASTER');
@@ -25,11 +25,11 @@ router.get("/", (req, res)=>{
                     console.log(err);
                 }
                 var roomID = result[0].room_ID;
-                callback(null,roomID,connection);
+                callback(null,roomID,connection); 
             })
         },
         function(roomID,connection,callback){
-            var sql2 = 'select question_ID from question_log where room_ID = ?;';
+            var sql2 = 'select question_ID from question_log where room_ID = ? and question_status = 1;';
             connection.query(sql2,roomID,(err,result2,fields)=>{
                 if(err){
                     console.log(err);
@@ -39,7 +39,7 @@ router.get("/", (req, res)=>{
             })
         },
         function(roomID,question,connection,callback){
-            var sql3 = 'select q.question_name,a.user_ID,a.answer as userAnswer,a.result,c.answer as collectAnswer,g.qualification_name,g.question_genre,question_years from question_table q,answer_table a,correct_table c,genre_table g where a.question_ID = c.question_ID and a.question_ID = g.question_ID and a.question_ID = q.question_ID and a.question_ID = ?;';
+            var sql3 = 'select distinct q.question_name,a.user_ID,a.answer as userAnswer,a.result,c.answer as collectAnswer,g.qualification_name,g.question_genre,question_years from question_table q,answer_table a,correct_table c,genre_table g where a.question_ID = c.question_ID and a.question_ID = g.question_ID and a.question_ID = q.question_ID and a.question_ID = ?;';
             connection.query(sql3,question,(err,result3,fields)=>{
                 if(err){
                     console.log(err);
@@ -50,7 +50,7 @@ router.get("/", (req, res)=>{
         function(roomID,question,result3,connection,callback){
             var sql4 = 'select user_name from user_table where user_ID = ?;';
             for(const array of result3){
-                connection.query(sql4,result3[0].user_ID,(err,result4,field)=>{
+                connection.query(sql4,array.user_ID,(err,result4,field)=>{
                     if(err){
                         console.log(err);
                     }

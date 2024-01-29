@@ -19,14 +19,8 @@
         <script>
             var socket = io();
             var f = document.forms.s1;
-            var usernameElement = document.getElementById('username');
-            var username = usernameElement.textContent;
-            console.log(username);
             var log = function(){
-                var usernameElement = document.getElementById('username');
-                var username = usernameElement.textContent;
-                console.log(username);
-                window.location.href ='/h?name=' + encodeURIComponent(username);
+                window.location.href ='/h';
             }
 
             setInterval(log,3000);

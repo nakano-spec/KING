@@ -6,6 +6,7 @@ const connection = mysql.createConnection({
 host: "localhost",
 user: "root",
 password: "Bonobo09040425",
+password: "20010426",
 database: "mydb2"
 });
 connection.connect();
@@ -34,7 +35,7 @@ pool.getConnection(function(err,connection){
             })
       },
       function(roomID,callback){
-            var sql2 = "select question_ID from question_log where room_ID = ?;";
+            var sql2 = "select question_ID from question_log where room_ID = ? and question_status = 1;";
             connection.query(sql2,roomID,(err,result2,fields)=>{
                   if(err){
                         console.log(err);
@@ -81,6 +82,19 @@ pool.getConnection(function(err,connection){
                               select_4:result4[0].select_4
                         }
                         res.render('kaitou2.ejs',data);
+                  })
+
+            }else if(flag === 1){
+                  var sql4 = "select question_text from question_table where question_ID = ?;";
+                  connection.query(sql4,question_ID,(err,result4,fields)=>{
+                        if(err){
+                              console.log(err);
+                        }
+                        var data ={
+                              name:name,
+                              question_text:result4[0].question_text
+                        }
+                        res.render('kaitou4.ejs',data);
                   })
             }
       }
