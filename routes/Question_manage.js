@@ -39,32 +39,32 @@ router.get('/', (req, res) => {
             
         });*/
 
+        router.post('/delete', (req, res) => {
+            var app = req.app;
+            var pool = app.get('pool2').of('MASTER');
+            var selectedQuestions = req.body.selectedQuestions;
+        
+            if (!selectedQuestions) {
+                return res.redirect('/Question_manage'); // 選択された問題がない場合
+            }
+            if (typeof selectedQuestions === 'string') {
+                selectedQuestions = [selectedQuestions]; // 単一選択の場合、配列に変換
+            }
+        
+            var deleteSql = 'DELETE FROM question_table WHERE question_name IN (?);';
+            //var QuestionDelete = 'DELETE FROM question_table WHERE question_name = selectedQuestions;';
+            pool.query(deleteSql, [selectedQuestions], (err3) => {
+                if (err3) {
+                    console.error("Delete query error:", err3);
+                    return res.status(500).send('Database delete query error');
+                }
+                res.redirect('/Question_manage'); // 削除後に元のページにリダイレクト
+            });
+        });
+        
         connection.release(); // コネクションをリリース
-
     });
 });
 
-router.post('/delete', (req, res) => {
-    var app = req.app;
-    var pool = app.get('pool2').of('MASTER');
-    var selectedQuestions = req.body.selectedQuestions;
-
-    if (!selectedQuestions) {
-        return res.redirect('/Question_manage'); // 選択された問題がない場合
-    }
-    if (typeof selectedQuestions === 'string') {
-        selectedQuestions = [selectedQuestions]; // 単一選択の場合、配列に変換
-    }
-
-    //var deleteSql = 'DELETE FROM question_table WHERE question_name IN (?);';
-    var QuestionDelete = 'DELETE FROM question_table WHERE question_name = selectedQuestions;';
-    pool.query(QuestionDelete, [selectedQuestions], (err3) => {
-        if (err3) {
-            console.error("Delete query error:", err3);
-            return res.status(500).send('Database delete query error');
-        }
-        res.redirect('/Question_manage'); // 削除後に元のページにリダイレクト
-    });
-});
 
 module.exports = router;
