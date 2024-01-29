@@ -16,6 +16,12 @@ router.get('/', function(req, res, next) {
     //res.render('hyouji4',{han1:results});
    //})
    pool.getConnection(function(err,connection){
+  
+   //myoujin
+   /*connection.query(s,(err,results,fields)=>{
+    res.render('hyouji4',{han1:results});
+   })
+   connection.release();*/
       async.waterfall([
          function(callback){
             connection.query(sql,username,(err,result,field)=>{

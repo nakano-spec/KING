@@ -33,8 +33,9 @@ var tuikaRouter = require('./routes/tuika');
 var failRouter = require('./routes/fail');
 var kanryouRouter = require('./routes/kanryou');
 var missRouter = require('./routes/miss');
-var uploadRouter = require('./routes/upload.js')
+var uploadRouter = require('./routes/upload.js');
 var tuika2Router = require('./routes/tuika2');
+var Question_manageRouter = require('./routes/Question_manage.js');
 var Answer_backRouter = require('./routes/Answer_back');
 var mainRouter = require('./routes/main');
 var account_listRouter = require('./routes/account_list');
@@ -44,16 +45,24 @@ var question_listRouter = require('./routes/question_list');
 var question_additionRouter = require('./routes/question_addition');
 var question_editRouter = require('./routes/question_edit');
 
-
-
 const router = require('./routes/index');
 //読み込んだexpressをapp変数に格納
 var app = express();
 
+const db_conf = {
+  host: 'localhost',
+  user: 'root',
+  password: '20021225',
+  database: 'mydb',
+};
 
-const db_conf ={
+const db_conf2 ={
   host :'localhost',
   user :'root',
+  password :'20021225',
+  database :'mydb2',
+}
+
 
   password :'Bonobo09040425',
 
@@ -65,7 +74,11 @@ const db_conf ={
 const pool = mysql.createPoolCluster();
 pool.add('MASTER',db_conf);
 
+const pool2 = mysql.createPoolCluster();
+pool2.add('MASTER',db_conf2);
+
 app.set('pool',pool);
+app.set('pool2',pool2);
 
 //ejsを使えるようにしている。
 app.set('views', path.join(__dirname, 'views'));
@@ -134,6 +147,7 @@ app.use('/kanryou',kanryouRouter);
 app.use('/miss',missRouter);
 app.use('/upload',uploadRouter);
 app.use('/tuika2',tuika2Router);
+app.use('/Question_manage',Question_manageRouter);
 app.use('/Answer_back',Answer_backRouter);
 app.use('/main',mainRouter);
 app.use('/account_list',account_listRouter);
@@ -142,6 +156,7 @@ app.use('/account_edit',account_editRouter);
 app.use('/question_list',question_listRouter);
 app.use('/question_addition',question_additionRouter);
 app.use('/question_edit',question_editRouter);
+
 
 
 // catch 404 and forward to error handler
