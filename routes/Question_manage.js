@@ -52,14 +52,30 @@ router.get('/', (req, res) => {
             }
         
             var deleteSql = 'DELETE FROM question_table WHERE question_name IN (?);';
-            //var QuestionDelete = 'DELETE FROM question_table WHERE question_name = selectedQuestions;';
+            /*var QuestionDelete = 'DELETE FROM question_table WHERE question_name = selectedQuestions;';
             pool.query(deleteSql, [selectedQuestions], (err3) => {
                 if (err3) {
                     console.error("Delete query error:", err3);
                     return res.status(500).send('Database delete query error');
                 }
                 res.redirect('/Question_manage'); // 削除後に元のページにリダイレクト
+            });*/
+            var deleteRelatedSql = 'DELETE FROM correct_table WHERE question_ID IN (SELECT question_ID FROM question_table WHERE question_name IN (?));';
+            pool.query(deleteRelatedSql, [selectedQuestions], (err) => {
+                if (err) {
+                    // エラー処理
+                    return;
+                }
+                // 続いて question_table から削除
+                pool.query(deleteSql, [selectedQuestions], (err) => {
+                    // 削除処理の続き
+                });
             });
+
+
+
+
+
         });
         
         connection.release(); // コネクションをリリース
