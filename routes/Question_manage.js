@@ -4,7 +4,6 @@ const router = express.Router();
 router.get('/', (req, res) => {
     var app = req.app;
     var QuestionSql = 'SELECT question_name, question_text FROM question_table;';
-    //var QuestionDelete = 'DELETE FROM question_table WHERE question_name = QuestionName;';
     var poolCluster = app.get('pool2');
     var pool = poolCluster.of('MASTER');
 
@@ -57,9 +56,9 @@ router.post('/delete', (req, res) => {
         selectedQuestions = [selectedQuestions]; // 単一選択の場合、配列に変換
     }
 
-    var deleteSql = 'DELETE FROM question_table WHERE question_name IN (?);';
-
-    pool.query(deleteSql, [selectedQuestions], (err3) => {
+    //var deleteSql = 'DELETE FROM question_table WHERE question_name IN (?);';
+    var QuestionDelete = 'DELETE FROM question_table WHERE question_name = selectedQuestions;';
+    pool.query(QuestionDelete, [selectedQuestions], (err3) => {
         if (err3) {
             console.error("Delete query error:", err3);
             return res.status(500).send('Database delete query error');
