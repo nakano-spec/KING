@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+
 const mysql = require("mysql")
 //このページに来たら最初に行う処理
 /* GET users listing. */
@@ -13,5 +14,12 @@ const connection = mysql.createConnection({
     password: 'matosui122083',
     database: 'mydb2'
   });
+
+
+//このページに来たら最初に行う処理
+/* GET users listing. */
+/*router.get('/', function(req, res, next) {
+  res.render('account_addition.ejs');
+});*/
 
 module.exports = router;
