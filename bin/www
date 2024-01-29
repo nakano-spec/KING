@@ -120,11 +120,15 @@
    const mysql_setting = {
      host: 'localhost',
      user: 'root',
-     password: 'Bonobo09040425',
      password: '20010426',
      database: 'mydb2'
    }
-
+   
+   //password: '20021225',
+   //password: '20010426',
+   //password: 'matosui122083',
+   // password: 'matosui122083',
+   
    const connection = mysql.createConnection(mysql_setting);
    connection.connect();
 

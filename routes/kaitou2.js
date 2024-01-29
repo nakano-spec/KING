@@ -5,11 +5,13 @@ const async = require('async');
 const connection = mysql.createConnection({
 host: "localhost",
 user: "root",
-password: "Bonobo09040425",
 password: "20010426",
 database: "mydb2"
 });
 connection.connect();
+
+//password: "Bonobo09040425",
+//password: "matosui122083",  
 
 router.get("/", (req, res)=>{
 
