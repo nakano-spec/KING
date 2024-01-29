@@ -7,86 +7,73 @@ const async = require('async');
 
 router.get("/", (req, res)=>{
     var app = req.app;
-    var name1 = req.session.user.username;
     var poolCluster = app.get('pool');
+    var pool = poolCluster.of
     var pool = poolCluster.of('MASTER');
-    const sql = "select room_ID from login_log where user_ID = ?;";
+    /*const sql = "select mon_ID,mondaibun from mondai_LIST where sentaku = '1';"
+    const sql2 = "select time from time_LIST where mon_ID = ?"*/
+    const sql3 = "select m.mon_ID,m.mondaibun,m.picturename,t.time from mondai_LIST m,time_LIST t where sentaku = '1' and m.mon_ID = t.mon_ID";
+    const sql4 = "select sentaku from mondai_LIST;"
+    /*var bun = 0;
+    var name1 = 0;
+    var time1 = 0;*/
     pool.getConnection(function(err,connection){
-        //connection.query(sql4,(err,result2,fields)=>{
+        connection.query(sql4,(err,result2,fields)=>{
+            if(err){
+                console.log(err);
+            }
             async.waterfall([
                 function(callback){
-                   connection.query(sql,name1,(err,result,field)=>{
-                     if(err){
-                        console.log(err);
+                    for(var i = 0;i < result2.length;i++){
+                        if(result2[i].sentaku == 1){
+                         connection.query(sql3,(err,result,fields)=>{
+                         if(err){
+                             console.log(err);
+                         }
+                         res.render('index',{web:result});
+                        })
+                        }
                      }
-                     console.log(result[0].room_ID);
-                     callback(null,result[0].room_ID);
-                   }) 
                 },
-                function(roomID,callback){ 
-                    var sql2 = "select question_ID from question_log where room_ID = ? and question_status = 1;";
-                    connection.query(sql2,roomID,(err,result2,field)=>{
-                        if(err){
-                            console.log(err);
-                        }
-                        if(result2 && result2.length > 0){
-                            console.log(result2[0].question_ID);
-                            callback(null,roomID,result2[0].question_ID);
-                        }else{
-                            res.render('hyouji2');
-                        }
-                        
-                    })
-                },
-                function(roomID,questionID,callback){
-                    var sql3 = "select pics_name from pics_table where question_ID = ?;";
-                    connection.query(sql3,questionID,(err,result3,field)=>{
-                        if(err){
-                            console.log(err);
-                        }
-                        if(result3.length == 0){
-                            var result = 0;
-                            callback(null,roomID,questionID,result);
-                        }else{
-                            var result = result3[0].pics_name;
-                            callback(null,roomID,questionID,result);
-                        }
-                    })
-                },
-                function(roomID,questionID,result,callback){
-                    if(result == 0){
-                        var sql4 = "select q.question_text,l.limit_time from question_table q,question_log l where q.question_ID = l.question_ID and l.question_ID = ? and l.room_ID = ?;";
-                        connection.query(sql4,[questionID,roomID],(err,result4,field)=>{
-                            if(err){
-                                console.log(err);
-                            }
-                            var data ={
-                                text:result4[0].question_text,
-                                time:result4[0].limit_time,
-                                picture:result
-                            }
-                            res.render('index',data);
-                        })
-                    }else{
-                        var sql4 = "select q.question_text,l.limit_time from question_table q,question_log l where q.question_ID = l.question_ID and l.room_ID = ? and l.question_ID = ?;";
-                        connection.query(sql4,[roomID,questionID],(err,result4,field)=>{
-                            if(err){
-                                console.log(err);
-                            }
-                            var data ={
-                                text:result4[0].question_text,
-                                time:result4[0].limit_time,
-                                picture:result
-                            }
-                            res.render('index',data);
-                        })
-                    }
-                }
             ],
             function(err){
                 res.render('hyouji2');
             })
+            /*for(var i = 0;i < result2.length;i++){
+               if(result2[i].sentaku == 1){
+                connection.query(sql3,(err,result,fields)=>{
+                if(err){
+                    console.log(err);
+                }
+                res.render('index',{web:result});
+               })
+               }
+            }
+            res.render('hyouji2');*/
+        })
+        connection.release();
     })
+    
+    /*connection.query(sql, (err, result, fields)=>{
+        if(err){
+            console.log(err);
+        }
+        //「resultの中にあるmondaibunのデータ」を格納している。「result」は配列になっている。
+        bun = result[0].mondaibun;
+        name1 = result[0].mon_ID;
+        connection.query(sql2,name1,(err,results2,fields) =>{
+            if(err) throw err;
+            time1 = results2[0].time;
+            //変数の中に複数の変数を作り、複数データを格納している。
+            var data1 ={
+                bun1:bun,
+                time:time1
+            }
+            //複数データを格納したデータを"index.ejs"ファイルに送っている。
+            res.render("index", data1);
+        })
+        connection.end();
+    })*/
 })
 
 

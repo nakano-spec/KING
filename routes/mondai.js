@@ -4,8 +4,9 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  var name1 = req.query.name;
   var app = req.app;
-  const sql = "select distinct q.question_name,g.qualification_name,g.question_genre,g.question_years from question_table q JOIN genre_table g ON q.question_id = g.question_id;"
+  const sql = "select name from mondai_LIST;"
   const poolCluster = app.get('pool');
   var pool = poolCluster.of('MASTER');
   pool.getConnection(function(err,connection){
@@ -18,7 +19,7 @@ router.get('/', function(req, res, next) {
         console.log(err);
       }
       var data = {
-        name:req.session.user.username,
+        name:name1,
         web:result1
       }
       res.render('mondai2',data);

@@ -22,10 +22,11 @@
             var socket = io();
             const rows = JSON.parse('<%- JSON.stringify(han1) %>');
             var rowlen = rows.length;
+            console.log(rowlen);
             var rowlen2 = parseInt(rowlen/12) + 1;
-            var user_ID = 0;
-            var username = 0;
-            var answer = 0;
+            console.log(rowlen2);
+            var a = 0;
+            var b = 0;
             var c = 0;
             var myd = document.getElementById("box");
             var i = 0;
@@ -38,11 +39,10 @@
               tr1 = document.createElement("tr");
               while(k < rowlen && j != 12){
                 var td1 = document.createElement("td");  
-                user_ID = rows[k].user_ID;
-                username = rows[k].user_name;
-                answer = rows[k].answer;
-                td1.innerHTML = "<h1>" + answer + "</h1><br><br>" + user_ID + "<br>" + username;
-                c = rows[k].result;
+                a = rows[k].username;
+                b = rows[k].kai;
+                td1.innerHTML = "<h1>" + b + "</h1><br><br>" + a;
+                c = rows[k].han;
                 tr1.appendChild(td1);
                 if(c === "○"){
                     td1.setAttribute("bgcolor","#FF0000");
