@@ -19,7 +19,7 @@ router.get("/", (req, res)=>{
     var poolCluster = app.get("pool");
     var pool = poolCluster.of('MASTER');
     pool.getConnection(function(err,connection){
-        connection.query(sql, (err, result, fields)=>{
+        connection.query(sql, (err, result, fields)=>{ //sqlでとってきた内容をresultに配列で格納している
             if(err)throw err;
             console.log(result);
             var r1 = result.length;
@@ -44,7 +44,7 @@ router.get("/", (req, res)=>{
                         if(result4[0].han_keisiki == "手動"){
                             res.render('mondai5',{web : result});
                         }else if(result4[0].han_keisiki == "自動")
-                        res.render("mondai4", { web: result});
+                        res.render("mondai4", { web: result}); //resultの内容をwebって言う変数に格納し直し、mondai4に送る。
                         })
                     }else if(result3[0].kai_keisiki == "入力"){
                         connection.query(sql4,result3[0].mon_ID,(err,result4,field)=>{
