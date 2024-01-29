@@ -12,8 +12,9 @@ router.get("/", (req, res)=>{
     var pool = poolCluster.of('MASTER');
     /*const sql = "select mon_ID,mondaibun from mondai_LIST where sentaku = '1';"
     const sql2 = "select time from time_LIST where mon_ID = ?"*/
-    const sql3 = "select m.mon_ID,m.mondaibun,m.picturename,t.time from mondai_LIST m,time_LIST t where sentaku = '1' and m.mon_ID = t.mon_ID";
-    const sql4 = "select sentaku from mondai_LIST;"
+    const sql3 = "select m.question_ID,m.question_text,m.picturename,t.time from mondai_LIST m,time_LIST t where sentaku = '1' and m.mon_ID = t.mon_ID";
+    const sql4 = "select question_log.question_ID,question_text,picture_flag from question_table,question_log where question_log.question_ID=question_table.question_ID AND question_status = 1 AND room_ID = 1;"
+    const pics_sql = "select pics_name from pics_table WHERE question_ID = ?;"
     /*var bun = 0;
     var name1 = 0;
     var time1 = 0;*/
@@ -26,7 +27,7 @@ router.get("/", (req, res)=>{
                 function(callback){
                     for(var i = 0;i < result2.length;i++){
                         if(result2[i].sentaku == 1){
-                         connection.query(sql3,(err,result,fields)=>{
+                         connection.query(pics_sql,(err,result,fields)=>{
                          if(err){
                              console.log(err);
                          }

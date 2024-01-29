@@ -30,9 +30,6 @@ var f  = document.forms.myform2;
             }, 1000);
             }
 
-            remain4.innerText = minites;
-            remain5.innerText = seconds; 
-
             f.button3.addEventListener('click',function(e){
                 e.preventDefault();
                 socket.emit('owa2');

@@ -21,13 +21,13 @@ router.get('/', function(req, res, next) {
   const set_time = "UPDATE question_log SET limit_time  = ? WHERE question_status = 1 AND room_ID = 1;"
   pool.getConnection(function(err,connection) {
     if(err != null){
-      console.log(err);
+      console.log("DB接続" + err);
       return;
     }
 
     connection.query(set_time,[by],(err,result,fields) =>{
       if(err){
-        console.log(err);
+        console.log("時間" + err);
       }
       connection.commit((err) =>{
         if(err){connection.rollback(() =>{throw console.log('error');});}
