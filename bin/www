@@ -394,8 +394,8 @@ const { namespace } = require('store');
      })
      // login
      socket.on('login_btnclick', (data) => {
-      //var username = sanitizeHtml(data.username);
-      //var password = sanitizeHtml(data.password);
+      var username = sanitizeHtml(data.username);
+      var password = sanitizeHtml(data.password);
       if(data.ExcelJSusername != '') {
           var login_select = "SELECT * FROM user_table;";
           connection.query(login_select,(err, users, fields) => {
