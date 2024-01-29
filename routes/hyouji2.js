@@ -6,6 +6,7 @@ const async = require('async');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
    var app = req.app;
+   var sql = 'select u.username,k.kai,k.result from answer_table k,users u where k.user_ID = u.user_ID;'
    var username = req.query.username;
    console.log(username);
    var sql = 'select room_ID from room_table where user_ID =?;'

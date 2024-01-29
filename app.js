@@ -9,6 +9,8 @@ var cors = require('cors');
 var mysql = require('mysql2');
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
+var cookies = require('js-cookie')//いちむら追加分：Cookieの扱いを楽にするやつ
+
 
 //パス情報を変数に格納している。
 var indexRouter = require('./routes/index');
@@ -43,6 +45,7 @@ var question_additionRouter = require('./routes/question_addition');
 var question_editRouter = require('./routes/question_edit');
 
 
+
 const router = require('./routes/index');
 //読み込んだexpressをapp変数に格納
 var app = express();
@@ -51,7 +54,11 @@ var app = express();
 const db_conf ={
   host :'localhost',
   user :'root',
+
+  password :'Bonobo09040425',
+
   password :'20010426',
+
   database :'mydb2',
 }
 
@@ -75,7 +82,11 @@ app.use(express.static('images'));
 var options = {
   host: 'localhost',
   user: 'root',
+
+  password: 'Bonobo09040425',
+
   password: '20010426',
+
   database: 'mydb2'
 };
 
@@ -131,6 +142,7 @@ app.use('/account_edit',account_editRouter);
 app.use('/question_list',question_listRouter);
 app.use('/question_addition',question_additionRouter);
 app.use('/question_edit',question_editRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -5,6 +5,7 @@ const async = require('async');
 const connection = mysql.createConnection({
 host: "localhost",
 user: "root",
+password: "Bonobo09040425",
 password: "20010426",
 database: "mydb2"
 });
@@ -82,6 +83,7 @@ pool.getConnection(function(err,connection){
                         }
                         res.render('kaitou2.ejs',data);
                   })
+
             }else if(flag === 1){
                   var sql4 = "select question_text from question_table where question_ID = ?;";
                   connection.query(sql4,question_ID,(err,result4,fields)=>{

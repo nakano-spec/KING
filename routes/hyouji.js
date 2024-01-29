@@ -7,6 +7,7 @@ const async = require('async');
 
 router.get("/", (req, res)=>{
     var app = req.app;
+    var name1 = req.query.name;
     var name1 = req.session.user.username;
     var poolCluster = app.get('pool');
     var pool = poolCluster.of('MASTER');
@@ -24,17 +25,19 @@ router.get("/", (req, res)=>{
                    }) 
                 },
                 function(roomID,callback){ 
+                    var sql2 = "select question_ID from question_log where room_ID = ?;";
                     var sql2 = "select question_ID from question_log where room_ID = ? and question_status = 1;";
                     connection.query(sql2,roomID,(err,result2,field)=>{
                         if(err){
                             console.log(err);
                         }
+                        console.log(result2[0].question_ID);
+                        callback(null,roomID,result2[0].question_ID);
                         if(result2 && result2.length > 0){
                             console.log(result2[0].question_ID);
                             callback(null,roomID,result2[0].question_ID);
                         }else{
                             res.render('hyouji2');
-                        }
                         
                     })
                 },
@@ -86,6 +89,19 @@ router.get("/", (req, res)=>{
             function(err){
                 res.render('hyouji2');
             })
+            /*for(var i = 0;i < result2.length;i++){
+               if(result2[i].sentaku == 1){
+                connection.query(sql3,(err,result,fields)=>{
+                if(err){
+                    console.log(err);
+                }
+                res.render('index',{web:result});
+               })
+               }
+            }
+            res.render('hyouji2');*/
+        //})
+        //connection.release();
     })
 })
 

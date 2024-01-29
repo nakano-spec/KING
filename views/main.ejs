@@ -75,6 +75,9 @@
         <header>
             <h1>メインページ</h1>
             <% if (name) { %>
+                <p><%= name %></p>
+              <% } else { %>
+                <p>guest</p>
                 <p id="username"><%= name %></p>
               <% } else { %>
                 <p id="username">guest</p>
@@ -104,31 +107,45 @@
         </main>
     </div>
     <script>
-        var socket = io();
+    //login.ejsから来たかどうかチェック
+      if(!cookies.get('name'))
+      {
+        socket.request.session.destoroy;
+        window.location.href = "login.ejs";
+      }
+
+        var userName = document.getElementById('username').textContent;
         document.getElementById('post-question-button').addEventListener('click', function() {
-            var page_update_No = 1;
-            socket.emit('pageupdate',page_update_No);
+            socket.request.session.page = {page:'mondai2.ejs'};
+            socket.request.session.Before_page = {Before_page:'main.ejs'};
+            socket.request.session.save();
+            console.log(socket.request.session);
+            callback(null,'done');
+            window.location.href = '/mondai?name=' + encodeURIComponent(userName); // 問題出題画面のURL
         });
 
         document.getElementById('question-list-button').addEventListener('click', function() {
-            window.location.href = '/question_list'; // 問題一覧画面のURL
+            socket.request.session.page = {page:'mondai2.ejs'};
+            socket.request.session.Before_page = {Before_page:'main.ejs'};
+            socket.request.session.save();
+            console.log(socket.request.session);
+            callback(null,'done');
+            window.location.href = '/question-list.html'; // 問題一覧画面のURL
         });
 
         document.getElementById('account-list-button').addEventListener('click', function() {
+            socket.request.session.page = {page:'mondai2.ejs'};
+            socket.request.session.Before_page = {Before_page:'main.ejs'};
+            socket.request.session.save();
+            console.log(socket.request.session);
+            callback(null,'done');
             window.location.href = '/account_list'; // アカウント一覧画面のURL
         });
 
         document.getElementById('logout-button').addEventListener('click', function() {
-            socket.emit('logout');
-        });
-
-        socket.on('page_updatecomplete',function(){
-             window.location.href = '/mondai'; // 問題出題画面のURL
-        });
-
-        socket.on('logout_complete',function(){
+            socket.request.session.destoroy;
             window.location.href = '/'; // ログイン画面のURL
-        })
+        });
     </script>
 </body>
 </html>

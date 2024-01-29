@@ -71,8 +71,12 @@
     </div>
     <script>
       //socket.ioの読み込み
-      var socket = io();
-      //
+      var socket = io();     
+      /*main.ejsから来たかどうかチェック
+      if()
+      {
+
+      }*/
       //データの読み取り
       var n = document.forms.f1;
       var s = document.f1.mo1; 
@@ -262,10 +266,12 @@
         window.location.href="/tuika";
       })
 
+
       n.display.addEventListener('click',function(e){
         e.preventDefault();
         window.open('/hyouji2');
       })
+
 
       socket.on('mondai_kekka',function(flag){
         if(flag = 1){

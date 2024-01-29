@@ -106,7 +106,8 @@
  const store = require('store');
  const { connect } = require('http2');
  const { namespace } = require('store');
-const { param } = require('jquery');
+ const { param } = require('jquery');
+
 
   // Socket.ioにセッションミドルウェアを適用する
   io.use((socket, next) => {
@@ -119,6 +120,7 @@ const { param } = require('jquery');
    const mysql_setting = {
      host: 'localhost',
      user: 'root',
+     password: 'Bonobo09040425',
      password: '20010426',
      database: 'mydb2'
    }
@@ -499,6 +501,7 @@ const { param } = require('jquery');
      socket.on('result_display',()=>{
         const username = socket.request.session.user.username;
         io.emit('result_display2',{username:username});
+
      })
      
      // login
@@ -510,6 +513,8 @@ const { param } = require('jquery');
           connection.query(login_select,(err, users, fields) => {
               if(err){
                   console.log(err);
+                  var new_flug = 0;
+                  io.emit('new_flug', new_flug);
                   io.emit('login_error');
               } else {
                   var user = users.find(user => user.user_ID === username && user.password === password);
@@ -679,6 +684,7 @@ const { param } = require('jquery');
       socket.on('owa2',() =>{
          io.emit('owari');
       })
+
 
       socket.on('pageupdate',(page_update_No) =>{
         switch(page_update_No){
@@ -891,6 +897,7 @@ const { param } = require('jquery');
           socket.emit('questiongenre', result);
         });
       })
+
 
       socket.on('logout',function(){
         socket.request.session.destroy(function(err) {
