@@ -1,109 +1,50 @@
 const express = require("express");
 var router = express.Router();
 const mysql = require("mysql");
-const { route } = require(".");
 const async = require('async');
-//mysqlに接続する際のデータを入れ、接続できるようにする。
 
-router.get("/", (req, res)=>{
+router.get("/", (req, res) => {
     var app = req.app;
-    var name1 = req.query.name;
     var name1 = req.session.user.username;
-    var poolCluster = app.get('pool');
-    var pool = poolCluster.of('MASTER');
-    const sql = "select room_ID from login_log where user_ID = ?;";
-    pool.getConnection(function(err,connection){
-        //connection.query(sql4,(err,result2,fields)=>{
-            async.waterfall([
-                function(callback){
-                   connection.query(sql,name1,(err,result,field)=>{
-                     if(err){
-                        console.log(err);
-                     }
-                     console.log(result[0].room_ID);
-                     callback(null,result[0].room_ID);
-                   }) 
-                },
-                function(roomID,callback){ 
-                    var sql2 = "select question_ID from question_log where room_ID = ?;";
-                    var sql2 = "select question_ID from question_log where room_ID = ? and question_status = 1;";
-                    connection.query(sql2,roomID,(err,result2,field)=>{
-                        if(err){
-                            console.log(err);
-                        }
-                        console.log(result2[0].question_ID);
-                        callback(null,roomID,result2[0].question_ID);
-                        if(result2 && result2.length > 0){
-                            console.log(result2[0].question_ID);
-                            callback(null,roomID,result2[0].question_ID);
-                        }else{
-                            res.render('hyouji2');
-                        
-                    })
-                },
-                function(roomID,questionID,callback){
-                    var sql3 = "select pics_name from pics_table where question_ID = ?;";
-                    connection.query(sql3,questionID,(err,result3,field)=>{
-                        if(err){
-                            console.log(err);
-                        }
-                        if(result3.length == 0){
-                            var result = 0;
-                            callback(null,roomID,questionID,result);
-                        }else{
-                            var result = result3[0].pics_name;
-                            callback(null,roomID,questionID,result);
-                        }
-                    })
-                },
-                function(roomID,questionID,result,callback){
-                    if(result == 0){
-                        var sql4 = "select q.question_text,l.limit_time from question_table q,question_log l where q.question_ID = l.question_ID and l.question_ID = ? and l.room_ID = ?;";
-                        connection.query(sql4,[questionID,roomID],(err,result4,field)=>{
-                            if(err){
-                                console.log(err);
-                            }
-                            var data ={
-                                text:result4[0].question_text,
-                                time:result4[0].limit_time,
-                                picture:result
-                            }
-                            res.render('index',data);
-                        })
-                    }else{
-                        var sql4 = "select q.question_text,l.limit_time from question_table q,question_log l where q.question_ID = l.question_ID and l.room_ID = ? and l.question_ID = ?;";
-                        connection.query(sql4,[roomID,questionID],(err,result4,field)=>{
-                            if(err){
-                                console.log(err);
-                            }
-                            var data ={
-                                text:result4[0].question_text,
-                                time:result4[0].limit_time,
-                                picture:result
-                            }
-                            res.render('index',data);
-                        })
-                    }
-                }
-            ],
-            function(err){
-                res.render('hyouji2');
-            })
-            /*for(var i = 0;i < result2.length;i++){
-               if(result2[i].sentaku == 1){
-                connection.query(sql3,(err,result,fields)=>{
-                if(err){
-                    console.log(err);
-                }
-                res.render('index',{web:result});
-               })
-               }
-            }
-            res.render('hyouji2');*/
-        //})
-        //connection.release();
-    })
-})
+    var pool = app.get('pool').of('MASTER');
 
+    pool.getConnection(function(err, connection) {
+        if (err) {
+            console.error("DB connection error:", err);
+            res.status(500).send("Database connection error");
+            return;
+        }
+
+        async.waterfall([
+            function(callback) {
+                const sql = "SELECT room_ID FROM login_log WHERE user_ID = ?;";
+                connection.query(sql, [name1], (err, result) => {
+                    if (err) return callback(err);
+                    var roomID = result[0].room_ID;
+                    callback(null, roomID);
+                });
+            },
+            function(roomID, callback) {
+                var sql2 = "SELECT question_ID FROM question_log WHERE room_ID = ? AND question_status = 1;";
+                connection.query(sql2, [roomID], (err, result2) => {
+                    if (err) return callback(err);
+                    if (result2.length > 0) {
+                        var questionID = result2[0].question_ID;
+                        callback(null, roomID, questionID);
+                    } else {
+                        res.render('hyouji2');
+                    }
+                });
+            },
+            // ... その他の処理
+        ], function(err) {
+            if (err) {
+                console.error("Async waterfall error:", err);
+                res.status(500).send("Server error");
+            }
+            connection.release();
+        });
+    });
+});
 
 module.exports = router;
