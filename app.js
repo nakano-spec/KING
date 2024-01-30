@@ -63,14 +63,6 @@ const db_conf2 ={
   database :'mydb2',
 }
 
-
-  password :'Bonobo09040425',
-
-  password :'20010426',
-
-  database :'mydb2',
-}
-
 const pool = mysql.createPoolCluster();
 pool.add('MASTER',db_conf);
 
